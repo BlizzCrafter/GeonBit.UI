@@ -13,7 +13,7 @@ namespace GeonBit.UI.Example
         [STAThread]
         static void Main()
         {
-            using (var game = new GeonBitUI_Examples())
+            using (var game = new GamePad_Example())
                 game.Run();
         }
     }
