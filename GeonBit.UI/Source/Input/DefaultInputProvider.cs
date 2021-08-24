@@ -7,6 +7,7 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
+using GeonBit.UI.Source.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -16,7 +17,7 @@ namespace GeonBit.UI
     /// Implement Mouse Input and Keyboard Input for GeonBit.UI + provide some helpful utils you can use externally.
     /// This is the object we provide to GeonBit.UI by default, if no other input providers were set by user.
     /// </summary>
-    public class DefaultInputProvider : IMouseInput, IKeyboardInput
+    public class DefaultInputProvider : IMouseInput, IKeyboardInput, IGamePadInput
     {
         // store current & previous keyboard states so we can detect key release
         KeyboardState _newKeyboardState;
@@ -25,6 +26,10 @@ namespace GeonBit.UI
         // store current & previous mouse states so we can detect key release and diff
         MouseState _newMouseState;
         MouseState _oldMouseState;
+
+        // store current & previous gamepad states so we can detect key release and diff
+        GamePadState _newGamePadState;
+        GamePadState _oldGamePadState;
 
         // store old and new mouse position so we can get diff
         Vector2 _newMousePos;
@@ -78,6 +83,9 @@ namespace GeonBit.UI
             _newMouseState = _oldMouseState;
             _newMousePos = new Vector2(_newMouseState.X, _newMouseState.Y);
 
+            // init gamepad states
+            _newGamePadState = _oldGamePadState;
+
             // call first update to get starting positions
             Update(new GameTime());
         }
@@ -104,10 +112,12 @@ namespace GeonBit.UI
             // store previous states
             _oldMouseState = _newMouseState;
             _oldKeyboardState = _newKeyboardState;
+            _oldGamePadState = _newGamePadState;
 
             // get new states
             _newMouseState = Mouse.GetState();
             _newKeyboardState = Keyboard.GetState();
+            _newGamePadState = GamePad.GetState(PlayerIndex.One);
 
             // get mouse position
             _oldMousePos = _newMousePos;
@@ -629,6 +639,201 @@ namespace GeonBit.UI
         {
             return _oldKeyboardState.IsKeyDown(key) &&
                    _newKeyboardState.IsKeyUp(key);
+        }
+
+        /// <summary>
+        /// Return the state of a gamepad button (up / down).
+        /// </summary>
+        /// <param name="button">Button to check.</param>
+        /// <returns>GamePad button state.</returns>
+        private ButtonState GetGamePadButtonState(Buttons button = Buttons.A)
+        {
+            switch (button)
+            {
+                case Buttons.A:
+                    return _newGamePadState.Buttons.A;
+                case Buttons.B:
+                    return _newGamePadState.Buttons.B;
+                case Buttons.X:
+                    return _newGamePadState.Buttons.X;
+                case Buttons.Y:
+                    return _newGamePadState.Buttons.Y;
+                case Buttons.DPadUp:
+                    return _newGamePadState.DPad.Up;
+                case Buttons.DPadDown:
+                    return _newGamePadState.DPad.Down;
+                case Buttons.DPadLeft:
+                    return _newGamePadState.DPad.Left;
+                case Buttons.DPadRight:
+                    return _newGamePadState.DPad.Right;
+                case Buttons.LeftShoulder:
+                    return _newGamePadState.Buttons.LeftShoulder;
+                case Buttons.RightShoulder:
+                    return _newGamePadState.Buttons.RightShoulder;
+                case Buttons.LeftStick:
+                    return _newGamePadState.Buttons.LeftStick;
+                case Buttons.RightStick:
+                    return _newGamePadState.Buttons.RightStick;
+                case Buttons.Start:
+                    return _newGamePadState.Buttons.Start;
+                case Buttons.Back:
+                    return _newGamePadState.Buttons.Back;
+                case Buttons.BigButton:
+                    return _newGamePadState.Buttons.BigButton;
+            }
+            return ButtonState.Released;
+        }
+
+        /// <summary>
+        /// Return the state of a gamepad button (up / down), in previous frame.
+        /// </summary>
+        /// <param name="button">Button to check.</param>
+        /// <returns>GamePad button state.</returns>
+        private ButtonState GetGamePadPreviousButtonState(Buttons button = Buttons.A)
+        {
+            switch (button)
+            {
+                case Buttons.A:
+                    return _oldGamePadState.Buttons.A;
+                case Buttons.B:
+                    return _oldGamePadState.Buttons.B;
+                case Buttons.X:
+                    return _oldGamePadState.Buttons.X;
+                case Buttons.Y:
+                    return _oldGamePadState.Buttons.Y;
+                case Buttons.DPadUp:
+                    return _oldGamePadState.DPad.Up;
+                case Buttons.DPadDown:
+                    return _oldGamePadState.DPad.Down;
+                case Buttons.DPadLeft:
+                    return _oldGamePadState.DPad.Left;
+                case Buttons.DPadRight:
+                    return _oldGamePadState.DPad.Right;
+                case Buttons.LeftShoulder:
+                    return _oldGamePadState.Buttons.LeftShoulder;
+                case Buttons.RightShoulder:
+                    return _oldGamePadState.Buttons.RightShoulder;
+                case Buttons.LeftStick:
+                    return _oldGamePadState.Buttons.LeftStick;
+                case Buttons.RightStick:
+                    return _oldGamePadState.Buttons.RightStick;
+                case Buttons.Start:
+                    return _oldGamePadState.Buttons.Start;
+                case Buttons.Back:
+                    return _oldGamePadState.Buttons.Back;
+                case Buttons.BigButton:
+                    return _oldGamePadState.Buttons.BigButton;
+            }
+            return ButtonState.Released;
+        }
+
+        /// <summary>
+        /// Check if a given gamepad button is down.
+        /// </summary>
+        /// <param name="button">GamePad button to check.</param>
+        /// <return>True if given gamepad button is down.</return>
+        public bool GamePadButtonDown(Buttons button = Buttons.A)
+        {
+            return GetGamePadButtonState(button) == ButtonState.Pressed;
+        }
+
+        /// <summary>
+        /// Check if a given gamepad button was released in current frame.
+        /// </summary>
+        /// <param name="button">GamePad button to check.</param>
+        /// <return>True if given gamepad button was released in this frame.</return>
+        public bool GamePadButtonPressed(Buttons button = Buttons.A)
+        {
+            return GetGamePadButtonState(button) == ButtonState.Pressed && GetGamePadPreviousButtonState(button) == ButtonState.Released;
+        }
+
+        /// <summary>
+        /// Check if a given gamepad button was just clicked (eg released after being pressed down)
+        /// </summary>
+        /// <param name="button">GamePad button to check.</param>
+        /// <return>True if given gamepad button is clicked.</return>
+        public bool GamePadButtonClick(Buttons button = Buttons.A)
+        {
+            return GetGamePadButtonState(button) == ButtonState.Released && GetGamePadPreviousButtonState(button) == ButtonState.Pressed;
+        }
+
+        /// <summary>
+        /// Check if a given gamepad button was released in current frame.
+        /// </summary>
+        /// <param name="button">GamePad button to check.</param>
+        /// <return>True if given gamepad button was released in this frame.</return>
+        public bool GamePadButtonReleased(Buttons button = Buttons.A)
+        {
+            return GetGamePadButtonState(button) == ButtonState.Released && GetGamePadPreviousButtonState(button) == ButtonState.Pressed;
+        }
+
+        /// <summary>
+        /// Return if any of gamepad buttons is down.
+        /// </summary>
+        /// <returns>True if any gamepad button is currently down.</returns>
+        public bool AnyGamePadButtonDown()
+        {
+            return GamePadButtonDown(Buttons.A) ||
+                GamePadButtonDown(Buttons.B) ||
+                GamePadButtonDown(Buttons.X) ||
+                GamePadButtonDown(Buttons.Y) ||
+                GamePadButtonDown(Buttons.DPadUp) ||
+                GamePadButtonDown(Buttons.DPadDown) ||
+                GamePadButtonDown(Buttons.DPadLeft) ||
+                GamePadButtonDown(Buttons.DPadRight) ||
+                GamePadButtonDown(Buttons.LeftShoulder) ||
+                GamePadButtonDown(Buttons.RightShoulder) ||
+                GamePadButtonDown(Buttons.LeftStick) ||
+                GamePadButtonDown(Buttons.RightStick) ||
+                GamePadButtonDown(Buttons.Start) ||
+                GamePadButtonDown(Buttons.Back) ||
+                GamePadButtonDown(Buttons.BigButton);
+        }
+
+        /// <summary>
+        /// Return if any of gamepad buttons was pressed.
+        /// </summary>
+        /// <returns>True if any gamepad button was pressed.</returns>
+        public bool AnyGamePadButtonPressed()
+        {
+            return GamePadButtonPressed(Buttons.A) ||
+                GamePadButtonPressed(Buttons.B) ||
+                GamePadButtonPressed(Buttons.X) ||
+                GamePadButtonPressed(Buttons.Y) ||
+                GamePadButtonPressed(Buttons.DPadUp) ||
+                GamePadButtonPressed(Buttons.DPadDown) ||
+                GamePadButtonPressed(Buttons.DPadLeft) ||
+                GamePadButtonPressed(Buttons.DPadRight) ||
+                GamePadButtonPressed(Buttons.LeftShoulder) ||
+                GamePadButtonPressed(Buttons.RightShoulder) ||
+                GamePadButtonPressed(Buttons.LeftStick) ||
+                GamePadButtonPressed(Buttons.RightStick) ||
+                GamePadButtonPressed(Buttons.Start) ||
+                GamePadButtonPressed(Buttons.Back) ||
+                GamePadButtonPressed(Buttons.BigButton);
+        }
+
+        /// <summary>
+        /// Return if any gamepad button was released this frame.
+        /// </summary>
+        /// <returns>True if any gamepad button was released.</returns>
+        public bool AnyGamePadButtonReleased()
+        {
+            return GamePadButtonReleased(Buttons.A) ||
+                GamePadButtonReleased(Buttons.B) ||
+                GamePadButtonReleased(Buttons.X) ||
+                GamePadButtonReleased(Buttons.Y) ||
+                GamePadButtonReleased(Buttons.DPadUp) ||
+                GamePadButtonReleased(Buttons.DPadDown) ||
+                GamePadButtonReleased(Buttons.DPadLeft) ||
+                GamePadButtonReleased(Buttons.DPadRight) ||
+                GamePadButtonReleased(Buttons.LeftShoulder) ||
+                GamePadButtonReleased(Buttons.RightShoulder) ||
+                GamePadButtonReleased(Buttons.LeftStick) ||
+                GamePadButtonReleased(Buttons.RightStick) ||
+                GamePadButtonReleased(Buttons.Start) ||
+                GamePadButtonReleased(Buttons.Back) ||
+                GamePadButtonReleased(Buttons.BigButton);
         }
     }
 }
