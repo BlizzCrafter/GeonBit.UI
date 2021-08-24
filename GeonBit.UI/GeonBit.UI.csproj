@@ -47,6 +47,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GamePad_Example.cs" />
     <Compile Include="GeonBitUI_Examples.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -67,6 +68,8 @@
     <Compile Include="Source\Entities\Image.cs" />
     <Compile Include="Source\Entities\Label.cs" />
     <Compile Include="Source\Entities\LineSpace.cs" />
+    <Compile Include="Source\Entities\PanelBar.cs" />
+    <Compile Include="Source\Entities\PanelGrid.cs" />
     <Compile Include="Source\Entities\RichParagraph.cs" />
     <Compile Include="Source\Entities\PanelBase.cs" />
     <Compile Include="Source\Entities\Panel.cs" />
@@ -83,12 +86,15 @@
     <Compile Include="Source\Entities\VerticalScrollbar.cs" />
     <Compile Include="Source\Exceptions.cs" />
     <Compile Include="Source\Input\DefaultInputProvider.cs" />
+    <Compile Include="Source\Input\GamePadSetup.cs" />
+    <Compile Include="Source\Input\IGamePadInput.cs" />
     <Compile Include="Source\Input\IKeyboardInput.cs" />
     <Compile Include="Source\Input\IMouseInput.cs" />
     <Compile Include="Source\Resources.cs" />
     <Compile Include="Source\UserInterface.cs" />
     <Compile Include="Source\Utils\MessageBox.cs" />
     <Compile Include="Source\Utils\Forms.cs" />
+    <Compile Include="Source\Utils\MessageBoxGamePad.cs" />
     <Compile Include="Source\Utils\PanelsGrid.cs" />
     <Compile Include="Source\Utils\SerializedDictionary.cs" />
     <Compile Include="Source\Utils\SimpleFileMenu.cs" />
