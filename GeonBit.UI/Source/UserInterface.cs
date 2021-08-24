@@ -14,6 +14,7 @@ using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework.Content;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
+using GeonBit.UI.Source.Input;
 
 
 namespace GeonBit.UI
@@ -117,6 +118,12 @@ namespace GeonBit.UI
         /// with your own object that emulates keyboard input.
         /// </summary>
         public IKeyboardInput KeyboardInputProvider;
+
+        /// <summary>
+        /// The object that provide gamepad input for GeonBit UI.
+        /// By default it uses internal implementation that uses MonoGame gamepad input.
+        /// </summary>
+        public IGamePadInput GamePadInputProvider;
 
         /// <summary>
         /// Get current game time value.
@@ -430,6 +437,7 @@ namespace GeonBit.UI
             // create default input providers
             MouseInputProvider = new DefaultInputProvider();
             KeyboardInputProvider = new DefaultInputProvider();
+            GamePadInputProvider = new DefaultInputProvider();
 
             // create draw utils
             DrawUtils = new DrawUtils();
@@ -526,6 +534,7 @@ namespace GeonBit.UI
             // update input managers
             MouseInputProvider.Update(gameTime);
             if (MouseInputProvider != KeyboardInputProvider) { KeyboardInputProvider.Update(gameTime); }
+            GamePadInputProvider.Update(gameTime);
 
             // unset the drag target if the mouse was released
             if (_dragTarget != null && !MouseInputProvider.MouseButtonDown(MouseButton.Left)) {
