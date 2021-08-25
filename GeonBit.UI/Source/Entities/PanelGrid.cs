@@ -324,15 +324,12 @@ namespace GeonBit.UI.Source.Entities
 
                             SelectRoot();
 
-                            if (Identifier == GamePadSetup.GetIdentifier(HierarchyIdentifier.PanelGrid))
-                            {
-                                _LockPanelGrid = true;
+                            _LockPanelGrid = true;
 
-                                PanelGrid rootGrid =
-                                    UserInterface.Active.Root.Find(GamePadSetup.GetIdentifier(HierarchyIdentifier.RootGrid), true) as PanelGrid;
+                            PanelGrid rootGrid =
+                                UserInterface.Active.Root.Find(GamePadSetup.GetIdentifier(HierarchyIdentifier.RootGrid), true) as PanelGrid;
 
-                                if (rootGrid != null) rootGrid._LockPanelGrid = false;
-                            }
+                            if (rootGrid != null) rootGrid._LockPanelGrid = false;
                         }
                     }
                 }
