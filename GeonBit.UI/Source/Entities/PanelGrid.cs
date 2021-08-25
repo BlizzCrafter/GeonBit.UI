@@ -104,13 +104,25 @@ namespace GeonBit.UI.Source.Entities
         private bool _LockPanelGrid = false;
 
         /// <summary>
-        /// Get the center panel of a PanelGrid (0, 1, 2, 3, Center, 5, 6, 7, 8)
+        /// Get a panel from the underlying PanelGrid.
         /// </summary>
-        public Panel GetCenterPanel()
+        public Panel GetGridPanel(Anchor anchor)
         {
-            if (Children != null && Children[4] != null)
+            int i = 0;
+            if (anchor == Anchor.TopLeft) i = 0;
+            else if (anchor == Anchor.TopCenter) i = 1;
+            else if (anchor == Anchor.TopRight) i = 2;
+            else if (anchor == Anchor.CenterLeft) i = 3;
+            else if (anchor == Anchor.Center) i = 4;
+            else if (anchor == Anchor.CenterRight) i = 5;
+            else if (anchor == Anchor.BottomLeft) i = 6;
+            else if (anchor == Anchor.BottomCenter) i = 7;
+            else if (anchor == Anchor.BottomRight) i = 8;
+            else throw new Exceptions.InvalidValueException("The anchor parameter has an invalid value. Supported values are: TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight.");
+
+            if (Children != null && Children[i] != null)
             {
-                return Children[4] as Panel;
+                return Children[i] as Panel;
             }
             else return null;
         }
