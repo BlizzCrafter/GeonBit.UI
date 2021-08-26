@@ -69,6 +69,7 @@
     <Compile Include="Source\Entities\Label.cs" />
     <Compile Include="Source\Entities\LineSpace.cs" />
     <Compile Include="Source\Entities\PanelBar.cs" />
+    <Compile Include="Source\Entities\PanelGamePad.cs" />
     <Compile Include="Source\Entities\PanelGrid.cs" />
     <Compile Include="Source\Entities\RichParagraph.cs" />
     <Compile Include="Source\Entities\PanelBase.cs" />
