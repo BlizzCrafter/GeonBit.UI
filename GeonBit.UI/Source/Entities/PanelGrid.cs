@@ -2,8 +2,6 @@
 using GeonBit.UI.Source.Input;
 using GeonBit.UI.Utils;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace GeonBit.UI.Source.Entities
@@ -27,21 +25,6 @@ namespace GeonBit.UI.Source.Entities
         /// Same as SmallCorners but this one has also small vertical bars which makes the hole surroundings of the center panel very small.
         /// </summary>
         SmallCornersVerticals
-    }
-
-    /// <summary>
-    /// The SelectionState determines if an entity should get enabled or disabled.
-    /// </summary>
-    public enum SelectionState
-    {
-        /// <summary>
-        /// Disable the entity.
-        /// </summary>
-        Disabled,
-        /// <summary>
-        /// Enable the entity.
-        /// </summary>
-        Enabled
     }
 
     /// <summary>
@@ -77,7 +60,7 @@ namespace GeonBit.UI.Source.Entities
     /// Navigate through the grid by using the DPad for example.
     /// </summary>
     [System.Serializable]
-    public class PanelGrid : Panel
+    public class PanelGrid : PanelGamePad
     {
         /// <summary>
         /// Static ctor.
@@ -86,22 +69,6 @@ namespace GeonBit.UI.Source.Entities
         {
             Entity.MakeSerializable(typeof(PanelGrid));
         }
-
-        private SelectionMode _SelectionMode { get; set; } = SelectionMode.PanelRoot;
-        private List<Entity> SelectableChildren = new List<Entity>();
-        private Panel _SelectedPanel;
-
-        private int _PanelCount = 3;
-        private int _RowCount = 0, _CurrentRow = 1;
-        private int _PanelIndex = 0, _ChildrenIndex = 0;
-
-        private int _StartOfTheRow => (_CurrentRow * _Row) - _Row;
-        private int _EndOfTheRow => (_CurrentRow * _Row) - 1;
-        private int _EndOfTheGridRow => (_RowCount * _Row) - _Row;
-        private const int _Row = 3;
-
-        // Selectively locks this PanelGrid (and not all of its childrens too like with the default "Locked" property of an entity.
-        private bool _LockPanelGrid = false;
 
         /// <summary>
         /// Get a panel from the underlying PanelGrid.
@@ -127,47 +94,21 @@ namespace GeonBit.UI.Source.Entities
             else return null;
         }
 
-        /// <summary>
-        /// Selects this PanelGrid.
-        /// </summary>
-        public void SelectRoot()
-        {
-            Skin = PanelSkin.None;
-            _SelectionMode = SelectionMode.PanelRoot;
+        private int _RowCount = 0, _CurrentRow = 1;
 
-            if (_SelectedPanel != null) _SelectedPanel.Skin = GamePadSetup.DefaultSkin;
-        }
+        private int _StartOfTheRow => (_CurrentRow * _Row) - _Row;
+        private int _EndOfTheRow => (_CurrentRow * _Row) - 1;
+        private int _EndOfTheGridRow => (_RowCount * _Row) - _Row;
+        private const int _Row = 3;
 
         /// <summary>
-        /// Selects the first panel in this PanelGrid.
+        /// Resets the current panel selection to the first index.
         /// </summary>
-        public void SelectRootContent()
+        public override void ResetPanelSelection()
         {
-            Skin = GamePadSetup.DefaultSkin;
-            _SelectionMode = SelectionMode.Panel;
+            _CurrentRow = 1;
 
-            ResetPanelSelection();
-        }
-
-        /// <summary>
-        /// Selects the first panel content in the currently selected panel of this PanelGrid.
-        /// </summary>
-        public void SelectPanelContent()
-        {
-            _SelectionMode = SelectionMode.PanelContent;
-
-            UpdateChildrenStateAll(SelectionState.Disabled);
-            UpdateChildrenStateSelected();
-        }
-
-        /// <summary>
-        /// Deselects the panel content of the currently selected panel of this PanelGrid.
-        /// </summary>
-        public void DeSelectPanelContent()
-        {
-            _SelectionMode = SelectionMode.Panel;
-
-            UpdateChildrenStateAll(SelectionState.Enabled);
+            base.ResetPanelSelection();
         }
 
         /// <summary>
@@ -190,9 +131,11 @@ namespace GeonBit.UI.Source.Entities
             SpaceAfter = Vector2.Zero;
             SpaceBefore = Vector2.Zero;
 
-            Identifier = GamePadSetup.GetIdentifier(HierarchyIdentifier.RootGrid);
+            LockPanelGrid = false; //The RootPanel shouldn't be locked at the beginning, because it's the first entity.
 
-            SelectRootContent();
+            Identifier = GetIdentifier(HierarchyIdentifier.RootGrid);
+
+            PanelModeIn(false);
         }
 
         /// <summary>
@@ -224,32 +167,30 @@ namespace GeonBit.UI.Source.Entities
 
             CreatePanelGrid(panelCount, panelSize);
 
-            Identifier = GamePadSetup.GetIdentifier(HierarchyIdentifier.PanelGrid);
-
-            _LockPanelGrid = true;
+            Identifier = GetIdentifier(HierarchyIdentifier.PanelGrid);
         }
                 
         private PanelGrid(
             Vector2 size,
             Anchor anchor = Anchor.Center,
             Vector2? offset = null)
-            : base(size, GamePadSetup.DefaultSkin, anchor, offset)
+            : base(size, anchor, offset)
         {
         }
 
         private void CreatePanelGrid(int panelCount, Vector2 panelSize)
         {
-            _PanelCount = panelCount;
-            _RowCount = _PanelCount / 3;
+            PanelCount = panelCount;
+            _RowCount = PanelCount / 3;
 
-            PanelsGrid.GenerateColums(_PanelCount, this, panelSize, GamePadSetup.DefaultSkin);
+            PanelsGrid.GenerateColums(PanelCount, this, panelSize, GamePadSetup.DefaultSkin);
 
             for (int i = 0; i < Children.Count; i++)
             {
                 if (Children[i] is Panel)
                 {
                     Children[i].Anchor = Anchor.AutoInline;
-                    Children[i].Identifier = $"{GamePadSetup.GetIdentifier(HierarchyIdentifier.Panel)} #{i}";
+                    Children[i].Identifier = $"{GetIdentifier(HierarchyIdentifier.Panel)} #{i}";
                 }
             }
 
@@ -257,145 +198,22 @@ namespace GeonBit.UI.Source.Entities
         }
 
         /// <summary>
-        /// Called every frame to update entity state and call events.
-        /// </summary>
-        /// <param name="targetEntity">The deepest child entity with highest priority that we point on and can be interacted with.</param>
-        /// <param name="dragTargetEntity">The deepest child dragable entity with highest priority that we point on and can be drag if mouse down.</param>
-        /// <param name="wasEventHandled">Set to true if current event was already handled by a deeper child.</param>
-        /// <param name="scrollVal">Combined scrolling value (panels with scrollbar etc) of all parents.</param>
-        public override void Update(ref Entity targetEntity, ref Entity dragTargetEntity, ref bool wasEventHandled, Point scrollVal)
-        {
-            if (Enabled && !_LockPanelGrid)
-            {
-                if (UserInterface.Active.GamePadInputProvider.GamePadButtonPressed(Buttons.Back))
-                {
-                    if (_SelectionMode == SelectionMode.Panel) ResetPanelSelection();
-                }
-                
-                if (Identifier == GamePadSetup.GetIdentifier(HierarchyIdentifier.PanelGrid))
-                {
-                    if (UserInterface.Active.GamePadInputProvider.GamePadButtonPressed(Buttons.A))
-                    {
-                        if (_SelectionMode == SelectionMode.Panel)
-                        {
-                            _SelectedPanel.OnClick?.Invoke(_SelectedPanel);
-
-                            _ChildrenIndex = 0;
-
-                            SelectableChildren = 
-                                _SelectedPanel
-                                .Children
-                                .Where(x => x.Identifier == GamePadSetup.GetIdentifier(HierarchyIdentifier.PanelContent)).ToList();
-
-                            if (SelectableChildren != null && SelectableChildren.Count > 0)
-                            {
-                                SelectPanelContent();
-                            }
-                            else _SelectionMode = SelectionMode.Panel;
-                        }
-                        else if (_SelectionMode == SelectionMode.PanelContent)
-                        {
-                            SelectableChildren[_ChildrenIndex].OnClick?.Invoke(_SelectedPanel);
-
-                            SelectableChildren[_ChildrenIndex].State = EntityState.MouseDown;
-                        }
-                        else if (_SelectionMode == SelectionMode.PanelRoot)
-                        {
-                            OnClick?.Invoke(this);
-
-                            SelectRootContent();
-
-                            FillColor = GamePadSetup.SelectedColor;
-                        }
-                    }
-                    else if (UserInterface.Active.GamePadInputProvider.GamePadButtonPressed(Buttons.B))
-                    {
-                        _ChildrenIndex = 0;
-
-                        if (_SelectionMode == SelectionMode.PanelContent)
-                        {
-                            _SelectedPanel.OnClick?.Invoke(_SelectedPanel);
-
-                            DeSelectPanelContent();
-                        }
-                        else if (_SelectionMode == SelectionMode.Panel)
-                        {
-                            OnClick?.Invoke(this);
-
-                            SelectRoot();
-
-                            _LockPanelGrid = true;
-
-                            PanelGrid rootGrid =
-                                UserInterface.Active.Root.Find(GamePadSetup.GetIdentifier(HierarchyIdentifier.RootGrid), true) as PanelGrid;
-
-                            if (rootGrid != null) rootGrid._LockPanelGrid = false;
-                        }
-                    }
-                }
-                else if(Identifier == GamePadSetup.GetIdentifier(HierarchyIdentifier.RootGrid))
-                {
-                    if (UserInterface.Active.GamePadInputProvider.GamePadButtonPressed(Buttons.A))
-                    {
-                        if (_SelectedPanel.Children != null && _SelectedPanel.Children.Count > 0)
-                        {
-                            _LockPanelGrid = true;
-
-                            PanelGrid panelGrid =
-                                        _SelectedPanel.Find(GamePadSetup.GetIdentifier(HierarchyIdentifier.PanelGrid), true) as PanelGrid;
-
-                            if (panelGrid != null) panelGrid._LockPanelGrid = false;
-                        }
-                    }
-                }
-
-                if (UserInterface.Active.GamePadInputProvider.GamePadButtonPressed(Buttons.DPadRight))
-                {
-                    if (_SelectionMode == SelectionMode.Panel) SelectPanel(PanelDirection.Right);
-                    else if (_SelectionMode == SelectionMode.PanelContent) SelectPanelContent(PanelDirection.Right);
-                }
-                else if (UserInterface.Active.GamePadInputProvider.GamePadButtonPressed(Buttons.DPadLeft))
-                {
-                    if (_SelectionMode == SelectionMode.Panel) SelectPanel(PanelDirection.Left);
-                    else if (_SelectionMode == SelectionMode.PanelContent) SelectPanelContent(PanelDirection.Left);
-                }
-                else if (UserInterface.Active.GamePadInputProvider.GamePadButtonPressed(Buttons.DPadDown))
-                {
-                    if (_SelectionMode == SelectionMode.Panel) SelectPanel(PanelDirection.Down);
-                    else if (_SelectionMode == SelectionMode.PanelContent) SelectPanelContent(PanelDirection.Down);
-                }
-                else if (UserInterface.Active.GamePadInputProvider.GamePadButtonPressed(Buttons.DPadUp))
-                {
-                    if (_SelectionMode == SelectionMode.Panel) SelectPanel(PanelDirection.Up);
-                    else if (_SelectionMode == SelectionMode.PanelContent) SelectPanelContent(PanelDirection.Up);
-                }
-
-                if (UserInterface.Active.GamePadInputProvider.GamePadButtonClick(Buttons.A))
-                {
-                    if (_SelectionMode == SelectionMode.PanelContent) UpdateChildrenStateSelected();
-                }
-            }
-
-            base.Update(ref targetEntity, ref dragTargetEntity, ref wasEventHandled, scrollVal);
-        }
-
-        /// <summary>
         /// Selects a panel from the PanelGrid.
         /// </summary>
         /// <param name="direction">The direction in which the index should try to shift.</param>
-        public void SelectPanel(PanelDirection direction)
+        protected override void SelectPanel(PanelDirection direction)
         {
             if (direction == PanelDirection.Right)
             {
-                _PanelIndex++;
+                PanelIndex++;
 
-                if (_PanelIndex > _EndOfTheRow) _PanelIndex = _StartOfTheRow;
+                if (PanelIndex > _EndOfTheRow) PanelIndex = _StartOfTheRow;
             }
             else if (direction == PanelDirection.Left)
             {
-                _PanelIndex--;
+                PanelIndex--;
 
-                if (_PanelIndex < _StartOfTheRow) _PanelIndex = _EndOfTheRow;
+                if (PanelIndex < _StartOfTheRow) PanelIndex = _EndOfTheRow;
             }
             else if (direction == PanelDirection.Down)
             {
@@ -403,12 +221,12 @@ namespace GeonBit.UI.Source.Entities
                 {
                     if (_CurrentRow < _RowCount)
                     {
-                        _PanelIndex += _Row;
+                        PanelIndex += _Row;
                         _CurrentRow++;
                     }
                     else
                     {
-                        _PanelIndex -= _StartOfTheRow;
+                        PanelIndex -= _StartOfTheRow;
                         _CurrentRow = 1;
                     }
                 }
@@ -419,92 +237,26 @@ namespace GeonBit.UI.Source.Entities
                 {
                     if (_CurrentRow > 1)
                     {
-                        _PanelIndex -= _Row;
+                        PanelIndex -= _Row;
                         _CurrentRow--;
                     }
                     else
                     {
-                        _PanelIndex += _EndOfTheGridRow;
+                        PanelIndex += _EndOfTheGridRow;
                         _CurrentRow = _RowCount;
                     }
                 }
             }
 
-            UpdatePanelSelection(_PanelIndex, direction);
-        }
-
-        private void SelectPanelContent(PanelDirection direction)
-        {
-            if (direction == PanelDirection.Down || direction == PanelDirection.Right)
-            {
-                if (_ChildrenIndex < SelectableChildren.Count - 1) _ChildrenIndex++;
-                else _ChildrenIndex = 0;
-            }
-            else if (direction == PanelDirection.Up || direction == PanelDirection.Left)
-            {
-                if (_ChildrenIndex > 0) _ChildrenIndex--;
-                else _ChildrenIndex = SelectableChildren.Count - 1;
-            }
-
-            UpdateChildrenStateSelected();
-        }
-
-        private void UpdateChildrenStateSelected()
-        {
-            SelectableChildren.ForEach(
-                x =>
-                {
-                    x.Enabled = true;
-                    x.FillColor = GamePadSetup.DefaultColor;
-                    x.State = EntityState.Default;
-                });
-            SelectableChildren[_ChildrenIndex].FillColor = GamePadSetup.SelectedColor;
-            SelectableChildren[_ChildrenIndex].State = EntityState.MouseHover;
-        }
-
-        private void UpdateChildrenStateAll(SelectionState selectionState)
-        {
-            Children.OfType<Panel>().ToList().ForEach(
-                            panel =>
-                            {
-                                panel.Children.Where(
-                                    child => child.Identifier == GamePadSetup.GetIdentifier(HierarchyIdentifier.PanelContent)).ToList().ForEach(
-                                    selectable =>
-                                    {
-                                        if (selectionState == SelectionState.Enabled)
-                                        {
-                                            selectable.Enabled = true;
-                                            selectable.FillColor = GamePadSetup.DefaultColor;
-                                            selectable.State = EntityState.Default;
-                                        }
-                                        else if (selectionState == SelectionState.Disabled)
-                                        {
-                                            selectable.Enabled = false;
-                                            selectable.State = EntityState.Default;
-                                        }
-                                    });
-                            });
-        }
-
-        /// <summary>
-        /// Resets the current panel selection to the first index.
-        /// </summary>
-        public void ResetPanelSelection()
-        {
-            _PanelIndex = 0;
-            _CurrentRow = 1;
-            UpdatePanelSelection();
+            base.SelectPanel(direction);
         }
 
         /// <summary>
         /// Changes the skin of the selected panel and scrolls the view (GridPanel) along in case a scrollbar is available.
         /// </summary>
-        /// <param name="panelIndex">The index of the selected panel.</param>
         /// <param name="direction">The direction of the panel selector.</param>
-        private void UpdatePanelSelection(int panelIndex = 0, PanelDirection direction = PanelDirection.None)
+        protected override void UpdatePanelSelection(PanelDirection direction = PanelDirection.None)
         {
-            if (panelIndex < 0 || panelIndex > Children.OfType<Panel>().Count() - 1) _PanelIndex = panelIndex = 0;
-
             if (Scrollbar != null)
             {
                 if (Scrollbar.Max == 0)
@@ -520,18 +272,18 @@ namespace GeonBit.UI.Source.Entities
                     if (_CurrentRow == 1) Scrollbar.Value = 0;
                     else if (_CurrentRow > 2)
                     {
-                        Scrollbar.Value += Children[_PanelIndex - _Row].GetActualDestRect().Bottom / 2;
+                        Scrollbar.Value += Children[PanelIndex - _Row].GetActualDestRect().Bottom / 2;
                     }
                 }
                 else if (direction == PanelDirection.Up)
                 {
                     if (Scrollbar.Value == 0 && _CurrentRow != 1)
                     {
-                        Scrollbar.Value += Children[_PanelIndex - (_Row * 2)].GetActualDestRect().Bottom;
+                        Scrollbar.Value += Children[PanelIndex - (_Row * 2)].GetActualDestRect().Bottom;
                     }
                     else if (_CurrentRow > 1)
                     {
-                        Scrollbar.Value += Children[_PanelIndex - _Row].GetActualDestRect().Bottom;
+                        Scrollbar.Value += Children[PanelIndex - _Row].GetActualDestRect().Bottom;
                     }
                     else Scrollbar.Value = 0;
                 }
@@ -541,20 +293,7 @@ namespace GeonBit.UI.Source.Entities
                 }
             }
 
-            var panelChildren = Children.OfType<Panel>().ToList();
-
-            panelChildren.ForEach(x => x.Skin = GamePadSetup.DefaultSkin);
-
-            _SelectedPanel = panelChildren[panelIndex];
-            _SelectedPanel.Skin = GamePadSetup.SelectedSkin;
-
-            if (Identifier == GamePadSetup.GetIdentifier(HierarchyIdentifier.RootGrid))
-            {
-                Skin = PanelSkin.None;
-            }
-
-            // DEBUG
-            // UserInterface.Active.MouseInputProvider.UpdateMousePosition(_SelectedPanel.GetActualDestRect().Center.ToVector2());            
+            base.UpdatePanelSelection(direction);
         }
 
         #region PanelGrid Layouts
