@@ -18,7 +18,7 @@ namespace GeonBit.UI
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        PanelGrid _RootGridPanel, _GridPanel;
+        PanelGrid _RootGridPanel;
         MessageBoxGamePad _MessageBox;
 
         /// <summary>
@@ -108,22 +108,31 @@ namespace GeonBit.UI
             _RootGridPanel = new PanelGrid(RootGridLayout.SmallCornersVerticals);
             UserInterface.Active.AddEntity(_RootGridPanel);
 
-            _GridPanel = new PanelGrid(new Vector2(0, 0), 24, new Vector2(0.33f, -1), Anchor.AutoInline);
+            PanelGrid panelGrid = new PanelGrid(new Vector2(0, 0), 24, new Vector2(0.33f, -1), Anchor.AutoInline);
             {
-                for (int i = 0; i < _GridPanel.Children.Count; i++)
+                for (int i = 0; i < panelGrid.Children.Count; i++)
                 {
-                    if (_GridPanel.Children[i] is Panel)
+                    if (panelGrid.Children[i] is Panel)
                     {
                         // add header
-                        _GridPanel.Children[i].AddChild(new Header($"Panel - #{i}"));
+                        panelGrid.Children[i].AddChild(new Header($"Panel - #{i}"));
 
                         // add some buttons
-                        _GridPanel.Children[i].AddChild(new Button("Say Hello", ButtonSkin.Default) { OnClick = SayHelloClicked, Identifier = GamePadSetup.GetIdentifier(HierarchyIdentifier.PanelContent) });
-                        _GridPanel.Children[i].AddChild(new Button("Say Cya", ButtonSkin.Default) { OnClick = SayCyaClicked, Identifier = GamePadSetup.GetIdentifier(HierarchyIdentifier.PanelContent) });
+                        panelGrid.Children[i].AddChild(new Button("Say Hello", ButtonSkin.Default) { OnClick = SayHelloClicked, Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) });
+                        panelGrid.Children[i].AddChild(new Button("Say Cya", ButtonSkin.Default) { OnClick = SayCyaClicked, Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) });
                     }
                 }
             }
-            _RootGridPanel.GetCenterPanel().AddChild(_GridPanel);
+
+            _RootGridPanel.GetGridPanel(Anchor.Center).AddChild(panelGrid);
+            _RootGridPanel.GetGridPanel(Anchor.TopCenter).AddChild(
+                new PanelBar(
+                    new Button("Test1"),
+                    new Button("Test2"),
+                    new Button("Test3"),
+                    new Button("Test4"),
+                    new Button("Test5")
+                    ));
 
             UserInterface.Active.MouseInputProvider.UpdateMousePosition(Vector2.Zero);
 
@@ -138,7 +147,7 @@ namespace GeonBit.UI
 
             _MessageBox = new MessageBoxGamePad();
             _MessageBox.ShowMessageBox(
-                $"Message from {GamePadSetup.GetIdentifier(entity.Identifier)}",
+                $"Message from {PanelGamePad.GetIdentifier(entity.Identifier)}",
                 "Hello, GamePad-User!",
                 MessageBoxOptions("Hello"));
         }
@@ -149,7 +158,7 @@ namespace GeonBit.UI
 
             _MessageBox = new MessageBoxGamePad();
             _MessageBox.ShowMessageBox(
-                $"Message from {GamePadSetup.GetIdentifier(entity.Identifier)}",
+                $"Message from {PanelGamePad.GetIdentifier(entity.Identifier)}",
                 "Cya, GamePad-User!",
                 MessageBoxOptions("Cya"));
         }
