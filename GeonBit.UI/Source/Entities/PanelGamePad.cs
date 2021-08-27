@@ -92,14 +92,30 @@ namespace GeonBit.UI.Source.Entities
         protected SelectionMode SelectionMode { get; set; } = SelectionMode.PanelRoot;
 
         /// <summary>
+        /// Highlighting a Panel happens in the RootGrid.
+        /// An entity like the PanelBar gets completly streched above such a Panel per default, which makes the highlight invisible.
+        /// Setting InvisiblePanel to true ensure visibility in this case, because then the corresponding Panel will be invisible instead.
+        /// </summary>
+        protected bool InvisiblePanel 
+        {
+            get { return _InvisiblePanel; }
+            set
+            {
+                _InvisiblePanel = value;
+                if (value) FillColor = new Color();
+            }
+        }
+        private bool _InvisiblePanel;
+
+        /// <summary>
         /// Selectively locks this PanelGrid (and not all of its childrens too like with the default "Locked" property of an entity.
         /// </summary>
-        protected bool LockPanelGrid = false;
+        protected bool LockPanelGrid { get; set; } = false;
 
         /// <summary>
         /// The currently selected Panel.
         /// </summary>
-        protected Panel SelectedPanel;
+        protected Panel SelectedPanel { get; set; }
 
         private List<Entity> _SelectableChildren = new List<Entity>();
         private Entity _ClickedPanelContent;
@@ -144,12 +160,10 @@ namespace GeonBit.UI.Source.Entities
                 //NextMod: from Panel -> to PanelRoot selection.
                 SelectionMode = SelectionMode.PanelRoot;
 
-                //Deselect the SelectedPanel if available (DefaultSkin, DefaultColor).
-                if (SelectedPanel != null)
-                {
-                    SelectedPanel.Skin = GamePadSetup.DefaultSkin;
-                    SelectedPanel.FillColor = GamePadSetup.DefaultColor;
-                }
+                //Deselect the SelectedPanel if available (DefaultSkin, DefaultColor, NoColor).
+                SelectedPanel.Skin = GamePadSetup.DefaultSkin;
+                if (InvisiblePanel) SelectedPanel.FillColor = new Color();
+                else SelectedPanel.FillColor = GamePadSetup.DefaultColor;
 
                 //Lock the PanelRoot (preperation for RootGrid(outer)-Selection).
                 LockPanelGrid = true;
@@ -289,7 +303,7 @@ namespace GeonBit.UI.Source.Entities
                 //Reset Skin for all Children.
                 panelChildren.ForEach(x => x.Skin = GamePadSetup.DefaultSkin);
 
-                //Set the Skin of the selected entity to "SelectedSkin".
+                //Set the Skin of the selected panel to "SelectedSkin".
                 SelectedPanel.Skin = GamePadSetup.SelectedSkin;
             }
             else
