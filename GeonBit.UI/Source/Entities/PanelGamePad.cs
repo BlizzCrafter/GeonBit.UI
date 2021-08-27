@@ -78,6 +78,10 @@ namespace GeonBit.UI.Source.Entities
         /// </summary>
         public int PanelIndex { get; protected set; }
         /// <summary>
+        /// This will be the used index when resetting the Panel-Selection.
+        /// </summary>
+        public int DefaultPanelIndex { get; protected set; }
+        /// <summary>
         /// Our current ChildrenIndex (selection).
         /// </summary>
         public int ChildrenIndex { get; protected set; }
@@ -273,7 +277,7 @@ namespace GeonBit.UI.Source.Entities
         /// </summary>
         public virtual void ResetPanelSelection()
         {
-            PanelIndex = 0;
+            PanelIndex = DefaultPanelIndex;
             UpdatePanelSelection(PanelDirection.None);
         }
 

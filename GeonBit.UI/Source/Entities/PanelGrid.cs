@@ -71,27 +71,53 @@ namespace GeonBit.UI.Source.Entities
         }
 
         /// <summary>
-        /// Get a panel from the underlying PanelGrid.
+        /// This will be the used index when resetting the Panel-Selection.
+        /// </summary>
+        public void SetDefaultPanelIndex(Anchor anchor)
+        {
+            int defaultIndex = GetGridPanelIndex(anchor);
+
+            DefaultPanelIndex = defaultIndex == -1 ? 0 : defaultIndex;
+        }
+
+        /// <summary>
+        /// Get a Panel from the underlying PanelGrid.
         /// </summary>
         public Panel GetGridPanel(Anchor anchor)
         {
-            int i = 0;
-            if (anchor == Anchor.TopLeft) i = 0;
-            else if (anchor == Anchor.TopCenter) i = 1;
-            else if (anchor == Anchor.TopRight) i = 2;
-            else if (anchor == Anchor.CenterLeft) i = 3;
-            else if (anchor == Anchor.Center) i = 4;
-            else if (anchor == Anchor.CenterRight) i = 5;
-            else if (anchor == Anchor.BottomLeft) i = 6;
-            else if (anchor == Anchor.BottomCenter) i = 7;
-            else if (anchor == Anchor.BottomRight) i = 8;
-            else throw new Exceptions.InvalidValueException("The anchor parameter has an invalid value. Supported values are: TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight.");
+            int i = ConvertAnchorToIndex(anchor);
 
             if (Children != null && Children[i] != null)
             {
                 return Children[i] as Panel;
             }
             else return null;
+        }
+        /// <summary>
+        /// Get a Panel-Index from the underlying PanelGrid.
+        /// </summary>
+        public int GetGridPanelIndex(Anchor anchor)
+        {
+            int i = ConvertAnchorToIndex(anchor);
+
+            if (Children != null && Children[i] != null)
+            {
+                return i;
+            }
+            else return -1;
+        }
+        private int ConvertAnchorToIndex(Anchor anchor)
+        {
+            if (anchor == Anchor.TopLeft) return 0;
+            else if (anchor == Anchor.TopCenter) return 1;
+            else if (anchor == Anchor.TopRight) return 2;
+            else if (anchor == Anchor.CenterLeft) return 3;
+            else if (anchor == Anchor.Center) return 4;
+            else if (anchor == Anchor.CenterRight) return 5;
+            else if (anchor == Anchor.BottomLeft) return 6;
+            else if (anchor == Anchor.BottomCenter) return 7;
+            else if (anchor == Anchor.BottomRight) return 8;
+            else throw new Exceptions.InvalidValueException("The anchor parameter has an invalid value. Supported values are: TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight.");
         }
 
         private int _RowCount = 0, _CurrentRow = 1;
@@ -115,8 +141,10 @@ namespace GeonBit.UI.Source.Entities
         /// Create a 3x3 FullScreen GridPanel which acts as a centered root GridPanel for all other GridPanels you create.
         /// </summary>
         /// <param name="rootGridLayout">The layout of the GridPanel.</param>
+        /// <param name="defaultPanelSelection">The Panel under this Anchor will be the target for resetting the Panel-Selection.</param>
         public PanelGrid(
-            RootGridLayout rootGridLayout)
+            RootGridLayout rootGridLayout,
+            Anchor defaultPanelSelection = Anchor.TopLeft)
             : this(Vector2.Zero, Anchor.Center, null)
         {
             PanelOverflowBehavior = PanelOverflowBehavior.Overflow;
@@ -135,6 +163,7 @@ namespace GeonBit.UI.Source.Entities
 
             Identifier = GetIdentifier(HierarchyIdentifier.RootGrid);
 
+            SetDefaultPanelIndex(defaultPanelSelection);
             PanelModeIn(false);
         }
 
