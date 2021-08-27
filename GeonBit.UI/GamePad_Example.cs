@@ -57,54 +57,6 @@ namespace GeonBit.UI
 
         private void InitGamePadExample()
         {
-            //int topPanelHeight = 40;
-            //Panel topPanel = new Panel(new Vector2(0, topPanelHeight + 2), GamePadSetup.DefaultSkin, Anchor.TopCenter);
-            //topPanel.Padding = Vector2.Zero;
-            //UserInterface.Active.AddEntity(topPanel);
-
-            //for (int i = 0; i < 3; i++)
-            //{
-            //    Button button = new Button($"Button #{i}", ButtonSkin.Default, Anchor.AutoInline, new Vector2(0.33f, topPanelHeight - 2));
-            //    button.Offset = new Vector2(5f, 2.5f);
-            //    topPanel.AddChild(button);
-            //}
-
-            //int leftPanelWidth = 65;
-            //Panel leftPanel = new Panel(new Vector2(leftPanelWidth + 2, 0.8f), GamePadSetup.DefaultSkin, Anchor.CenterLeft);
-            //leftPanel.Padding = Vector2.Zero;
-            //UserInterface.Active.AddEntity(leftPanel);
-
-            //for (int i = 0; i < 9; i++)
-            //{
-            //    Button button = new Button($"#{i}", ButtonSkin.Default, Anchor.AutoInline, new Vector2(0, leftPanelWidth - 2));
-            //    button.Offset = new Vector2(2.5f, 5f);
-            //    leftPanel.AddChild(button);
-            //}
-
-            //int rightPanelWidth = 65;
-            //Panel rightPanel = new Panel(new Vector2(rightPanelWidth + 2, 0.8f), GamePadSetup.DefaultSkin, Anchor.CenterRight);
-            //rightPanel.Padding = Vector2.Zero;
-            //UserInterface.Active.AddEntity(rightPanel);
-
-            //for (int i = 0; i < 9; i++)
-            //{
-            //    Button button = new Button($"#{i}", ButtonSkin.Default, Anchor.AutoInline, new Vector2(0, rightPanelWidth - 2));
-            //    button.Offset = new Vector2(2.5f, 5f);
-            //    rightPanel.AddChild(button);
-            //}
-
-            //int bottomPanelHeight = 40;
-            //Panel bottomPanel = new Panel(new Vector2(0, bottomPanelHeight + 2), GamePadSetup.DefaultSkin, Anchor.BottomCenter);
-            //bottomPanel.Padding = Vector2.Zero;
-            //UserInterface.Active.AddEntity(bottomPanel);
-
-            //for (int i = 0; i < 3; i++)
-            //{
-            //    Button button = new Button($"Button #{i}", ButtonSkin.Default, Anchor.AutoInline, new Vector2(0.33f, bottomPanelHeight - 2));
-            //    button.Offset = new Vector2(5f, 2.5f);
-            //    bottomPanel.AddChild(button);
-            //}
-
             _RootGridPanel = new PanelGrid(RootGridLayout.SmallCornersVerticals);
             UserInterface.Active.AddEntity(_RootGridPanel);
 
