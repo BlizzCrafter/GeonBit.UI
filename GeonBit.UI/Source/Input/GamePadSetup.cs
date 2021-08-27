@@ -18,6 +18,23 @@ namespace GeonBit.UI.Source.Input
         public static Color SelectedColor = Color.LightPink;
 
         /// <summary>
+        /// Xbox Button_A color.
+        /// </summary>
+        public static Color ButtonA = new Color(60, 219, 78);
+        /// <summary>
+        /// Xbox Button_X color.
+        /// </summary>
+        public static Color ButtonX = new Color(64, 204, 208);
+        /// <summary>
+        /// Xbox Button_Y color.
+        /// </summary>
+        public static Color ButtonY = new Color(236, 219, 51);
+        /// <summary>
+        /// Xbox Button_B color.
+        /// </summary>
+        public static Color ButtonB = new Color(208, 66, 66);
+
+        /// <summary>
         /// The default Skin of an entity.
         /// </summary>
         public static PanelSkin DefaultSkin = PanelSkin.Simple;
@@ -37,5 +54,17 @@ namespace GeonBit.UI.Source.Input
         /// Don't make it to short to avoid that the clicked panel content triggers right after a panel was selected.
         /// </summary>
         public static double PanelContentClickedTimeOut = 100;
+
+        /// <summary>
+        /// Initialize the GamePadSetup class.
+        /// </summary>
+        public static void Initialize()
+        {
+            RichParagraphStyleInstruction.AddInstruction("ButtonA", new RichParagraphStyleInstruction(ButtonA, FontStyle.Bold, 2));
+            RichParagraphStyleInstruction.AddInstruction("ButtonX", new RichParagraphStyleInstruction(ButtonX, FontStyle.Bold, 2));
+            RichParagraphStyleInstruction.AddInstruction("ButtonY", new RichParagraphStyleInstruction(ButtonY, FontStyle.Bold, 2));
+            RichParagraphStyleInstruction.AddInstruction("ButtonB", new RichParagraphStyleInstruction(ButtonB, FontStyle.Bold, 2));
+            RichParagraphStyleInstruction.AddInstruction("DPad", new RichParagraphStyleInstruction(Color.Black, FontStyle.Bold, 1, Color.WhiteSmoke));
+        }
     }
 }
