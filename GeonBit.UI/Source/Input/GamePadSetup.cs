@@ -60,11 +60,11 @@ namespace GeonBit.UI.Source.Input
         /// </summary>
         public static void Initialize()
         {
-            RichParagraphStyleInstruction.AddInstruction("ButtonA", new RichParagraphStyleInstruction(ButtonA, FontStyle.Bold, 2));
-            RichParagraphStyleInstruction.AddInstruction("ButtonX", new RichParagraphStyleInstruction(ButtonX, FontStyle.Bold, 2));
-            RichParagraphStyleInstruction.AddInstruction("ButtonY", new RichParagraphStyleInstruction(ButtonY, FontStyle.Bold, 2));
-            RichParagraphStyleInstruction.AddInstruction("ButtonB", new RichParagraphStyleInstruction(ButtonB, FontStyle.Bold, 2));
-            RichParagraphStyleInstruction.AddInstruction("DPad", new RichParagraphStyleInstruction(Color.Black, FontStyle.Bold, 1, Color.WhiteSmoke));
+            RichParagraphStyleInstruction.AddInstruction("BUTTON_A", new RichParagraphStyleInstruction(ButtonA, FontStyle.Bold, 2));
+            RichParagraphStyleInstruction.AddInstruction("BUTTON_X", new RichParagraphStyleInstruction(ButtonX, FontStyle.Bold, 2));
+            RichParagraphStyleInstruction.AddInstruction("BUTTON_Y", new RichParagraphStyleInstruction(ButtonY, FontStyle.Bold, 2));
+            RichParagraphStyleInstruction.AddInstruction("BUTTON_B", new RichParagraphStyleInstruction(ButtonB, FontStyle.Bold, 2));
+            RichParagraphStyleInstruction.AddInstruction("DPAD", new RichParagraphStyleInstruction(Color.Black, FontStyle.Bold, 1, Color.WhiteSmoke));
         }
     }
 }

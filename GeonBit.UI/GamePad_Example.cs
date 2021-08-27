@@ -94,7 +94,7 @@ namespace GeonBit.UI
                     ));
             _RootGridPanel.GetGridPanel(Anchor.BottomCenter).AddChild(
                 new PanelBar(
-                        new RichParagraph(@"{{ButtonA}}A{{DEFAULT}}: Accept {{ButtonB}}B{{DEFAULT}}: Back {{DPad}}DPad{{DEFAULT}}: Select", 
+                        new RichParagraph(@"{{BUTTON_A}}A{{DEFAULT}}: Accept {{BUTTON_B}}B{{DEFAULT}}: Back {{DPAD}}DPad{{DEFAULT}}: Select", 
                         Anchor.Center, scale: 2f) 
                         { AlignToCenter = true, WrapWords = false, BreakWordsIfMust = false, AddHyphenWhenBreakWord = false })
                     );
