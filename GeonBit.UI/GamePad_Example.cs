@@ -39,7 +39,8 @@ namespace GeonBit.UI
             UserInterface.Initialize(Content, BuiltinThemes.hd);
             UserInterface.Active.UseRenderTarget = true;
             UserInterface.Active.IncludeCursorInRenderTarget = false;
-            //UserInterface.Active.ShowCursor = false;
+            UserInterface.Active.ShowCursor = false;
+            //UserInterface.Active.DebugDraw = true;
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -52,12 +53,14 @@ namespace GeonBit.UI
 
             UserInterface.Active.GlobalScale = 0.5f;
 
+            GamePadSetup.Initialize();
+
             InitGamePadExample();
         }
 
         private void InitGamePadExample()
         {
-            _RootGridPanel = new PanelGrid(RootGridLayout.SmallCornersVerticals);
+            _RootGridPanel = new PanelGrid(RootGridLayout.SmallCornersVerticals, Anchor.TopRight);
             UserInterface.Active.AddEntity(_RootGridPanel);
 
             PanelGrid panelGrid = new PanelGrid(new Vector2(0, 0), 24, new Vector2(0.33f, -1), Anchor.AutoInline);
@@ -79,16 +82,24 @@ namespace GeonBit.UI
             _RootGridPanel.GetGridPanel(Anchor.Center).AddChild(panelGrid);
             _RootGridPanel.GetGridPanel(Anchor.TopCenter).AddChild(
                 new PanelBar(
-                    new Button("Test1"),
-                    new Button("Test2"),
-                    new Button("Test3"),
-                    new Button("Test4"),
-                    new Button("Test5")
+                    new Button("Test1", anchor: Anchor.AutoInline),
+                    new Button("Test2", anchor: Anchor.AutoInline),
+                    new Button("Test3", anchor: Anchor.AutoInline),
+                    new Button("Test4", anchor: Anchor.AutoInline),
+                    new Button("Test5", anchor: Anchor.AutoInline)
                     ));
+            _RootGridPanel.GetGridPanel(Anchor.TopRight).AddChild(
+                new PanelBar(
+                        new Icon(IconType.Heart, Anchor.Center) { MinSize = new Vector2(0, 0) } 
+                    ));
+            _RootGridPanel.GetGridPanel(Anchor.BottomCenter).AddChild(
+                new PanelBar(
+                        new RichParagraph(@"{{ButtonA}}A{{DEFAULT}}: Accept {{ButtonB}}B{{DEFAULT}}: Back {{DPad}}DPad{{DEFAULT}}: Select", 
+                        Anchor.Center, scale: 2f) 
+                        { AlignToCenter = true, WrapWords = false, BreakWordsIfMust = false, AddHyphenWhenBreakWord = false })
+                    );
 
             UserInterface.Active.MouseInputProvider.UpdateMousePosition(Vector2.Zero);
-
-            //UserInterface.Active.DebugDraw = true;
 
             base.Initialize();
         }
