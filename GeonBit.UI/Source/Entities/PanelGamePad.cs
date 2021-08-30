@@ -74,6 +74,16 @@ namespace GeonBit.UI.Source.Entities
     public abstract class PanelGamePad : Panel
     {
         /// <summary>
+        /// The last entity we have clicked.
+        /// </summary>
+        public static Entity ClickedPanelContent { get; set; }
+
+        /// <summary>
+        /// The currently selected Entity.
+        /// </summary>
+        public static Entity SelectedPanelContent { get; set; }
+
+        /// <summary>
         /// Our current PanelIndex (selection).
         /// </summary>
         public int PanelIndex { get; protected set; }
@@ -122,7 +132,6 @@ namespace GeonBit.UI.Source.Entities
         protected Panel SelectedPanel { get; set; }
 
         private List<Entity> _SelectableChildren = new List<Entity>();
-        private Entity _ClickedPanelContent;
         private bool _PanelContentClicked;
         private double _PanelContentClickedTimeOut;
 
@@ -195,6 +204,9 @@ namespace GeonBit.UI.Source.Entities
                     panelGamePad.LockPanelGrid = false;
                 }
             }
+            
+            //Deselect PanelContent.
+            SelectedPanelContent = null;
         }
 
         /// <summary>
@@ -237,6 +249,9 @@ namespace GeonBit.UI.Source.Entities
 
             //Enable all children from the whole panel again.
             SetChildrenEnabled(SelectionState.Enabled);
+
+            //Deselect PanelContent.
+            SelectedPanelContent = null;
         }
 
         /// <summary>
@@ -287,6 +302,8 @@ namespace GeonBit.UI.Source.Entities
         /// <param name="direction">The direction in which the index should try to shift.</param>
         protected virtual void SelectPanel(PanelDirection direction) 
         {
+            ClickedPanelContent = null;
+
             if (PanelIndex < 0 || PanelIndex > Children.OfType<Panel>().Count() - 1) PanelIndex = 0;
 
             UpdatePanelSelection(direction);
@@ -379,6 +396,8 @@ namespace GeonBit.UI.Source.Entities
             //Add selected color and state to the currently selected child.
             _SelectableChildren[ChildrenIndex].FillColor = GamePadSetup.SelectedColor;
             _SelectableChildren[ChildrenIndex].State = EntityState.MouseHover;
+
+            SelectedPanelContent = _SelectableChildren[ChildrenIndex];
         }
 
         #endregion Selection-Actions
@@ -389,7 +408,7 @@ namespace GeonBit.UI.Source.Entities
         protected void ClickPanelContent(bool raiseClickEvent = true)
         {
             _PanelContentClicked = true;
-            _ClickedPanelContent = _SelectableChildren[ChildrenIndex];
+            ClickedPanelContent = _SelectableChildren[ChildrenIndex];
             _SelectableChildren[ChildrenIndex].State = EntityState.MouseDown;
         }
 
@@ -437,19 +456,27 @@ namespace GeonBit.UI.Source.Entities
         }
 
         /// <summary>
-        /// Creates the GamePad-Panel based on a regular Panel-Entity.
+        /// Creates the GamePad-Panel with the default skin and based on a regular Panel-Entity.
         /// </summary>
-        /// <param name="size"></param>
-        /// <param name="anchor"></param>
-        /// <param name="offset"></param>
+        /// <param name="size">Panel size.</param>
+        /// <param name="anchor">Position anchor.</param>
+        /// <param name="offset">Offset from anchor position.</param>
         protected PanelGamePad(
                Vector2 size,
                Anchor anchor = Anchor.Center,
                Vector2? offset = null)
                : base(size, GamePadSetup.DefaultSkin, anchor, offset)
         {
+            //Fires the PanelContent.OnClick event after the timeout.
+            //Define the timeout with the GamePadSetup class - not here!
             _PanelContentClickedTimeOut = GamePadSetup.PanelContentClickedTimeOut;
+
+            //PanelGrids are locked by default.
+            //They get selectivly unlocked when the user navigates through the grid to avoid double inputs.
             LockPanelGrid = true;
+            
+            //We are doing clicking and event handling customly.
+            ClickThrough = true;
         }
 
         /// <summary>
@@ -517,8 +544,7 @@ namespace GeonBit.UI.Source.Entities
                     {
                         _PanelContentClicked = false;
 
-                        _ClickedPanelContent.OnClick?.Invoke(SelectedPanel);
-                        _ClickedPanelContent = null;
+                        ClickedPanelContent.OnClick?.Invoke(SelectedPanel);
 
                         _PanelContentClickedTimeOut = GamePadSetup.PanelContentClickedTimeOut;
 
