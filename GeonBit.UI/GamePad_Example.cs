@@ -73,8 +73,8 @@ namespace GeonBit.UI
                         panelGrid.Children[i].AddChild(new Header($"Panel - #{i}"));
 
                         // add some buttons
-                        panelGrid.Children[i].AddChild(new Button("Say Hello", ButtonSkin.Default) { OnClick = SayHelloClicked, Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) });
-                        panelGrid.Children[i].AddChild(new Button("Say Cya", ButtonSkin.Default) { OnClick = SayCyaClicked, Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) });
+                        panelGrid.Children[i].AddChild(new ButtonGamePad("Hello World", ButtonSkin.Default) { OnClick = SayHelloWorldClicked, Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) });
+                        panelGrid.Children[i].AddChild(new ButtonGamePad("Toggle", ButtonSkin.Default) { ToggleMode = true, Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) });
                     }
                 }
             }
@@ -86,7 +86,7 @@ namespace GeonBit.UI
                     new ButtonGamePad("Test2", anchor: Anchor.AutoInline),
                     new ButtonGamePad("Test3", anchor: Anchor.AutoInline),
                     new ButtonGamePad("Test4", anchor: Anchor.AutoInline),
-                    new ButtonGamePad("Toggle", ButtonSkin.Alternative, anchor: Anchor.AutoInline) { ToggleMode = true }
+                    new ButtonGamePad("Toggle", ButtonSkin.Alternative, anchor: Anchor.AutoInline) { ToggleMode = true, Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) }
                     ));
             _RootGridPanel.GetGridPanel(Anchor.TopRight).AddChild(
                 new PanelBar(
@@ -104,34 +104,23 @@ namespace GeonBit.UI
             base.Initialize();
         }
 
-        private void SayHelloClicked(Entity entity)
+        private void SayHelloWorldClicked(Entity entity)
         {
             _RootGridPanel.Enabled = false;
 
             _MessageBox = new MessageBoxGamePad();
             _MessageBox.ShowMessageBox(
-                $"Message from {PanelGamePad.GetIdentifier(entity.Identifier)}",
+                $"Message from {PanelGamePad.GetIdentifier(entity.Parent.Identifier)}",
                 "Hello, GamePad-User!",
-                MessageBoxOptions("Hello"));
+                MessageBoxOptions());
         }
 
-        private void SayCyaClicked(Entity entity)
-        {
-            _RootGridPanel.Enabled = false;
-
-            _MessageBox = new MessageBoxGamePad();
-            _MessageBox.ShowMessageBox(
-                $"Message from {PanelGamePad.GetIdentifier(entity.Identifier)}",
-                "Cya, GamePad-User!",
-                MessageBoxOptions("Cya"));
-        }
-
-        private MsgBoxOption[] MessageBoxOptions(string custom)
+        private MsgBoxOption[] MessageBoxOptions()
         {
             return new MsgBoxOption[]
             {
-                new MsgBoxOption("OK", MsgBoxClicked),
-                new MsgBoxOption(custom, MsgBoxClicked),
+                new MsgBoxOption("Yes", MsgBoxClicked),
+                new MsgBoxOption("No", MsgBoxClicked),
                 new MsgBoxOption("Cancel", MsgBoxClicked)
             };
         }
