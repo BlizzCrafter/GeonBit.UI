@@ -66,6 +66,7 @@
     <Compile Include="Source\Entities\Header.cs" />
     <Compile Include="Source\Entities\HorizontalLine.cs" />
     <Compile Include="Source\Entities\Icon.cs" />
+    <Compile Include="Source\Entities\IEntityGamePad.cs" />
     <Compile Include="Source\Entities\Image.cs" />
     <Compile Include="Source\Entities\Label.cs" />
     <Compile Include="Source\Entities\LineSpace.cs" />

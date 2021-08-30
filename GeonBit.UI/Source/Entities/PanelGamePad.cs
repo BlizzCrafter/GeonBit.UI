@@ -542,9 +542,13 @@ namespace GeonBit.UI.Source.Entities
                 {
                     if (_PanelContentClickedTimeOut < 0)
                     {
-                        _PanelContentClicked = false;
+                        _PanelContentClicked = false;                                               
 
-                        ClickedPanelContent.OnClick?.Invoke(SelectedPanel);
+                        if (ClickedPanelContent is IEntityGamePad)
+                        {
+                            ((IEntityGamePad)ClickedPanelContent).TriggerOnClick();
+                        }
+                        else ClickedPanelContent.OnClick?.Invoke(SelectedPanel);
 
                         _PanelContentClickedTimeOut = GamePadSetup.PanelContentClickedTimeOut;
 
