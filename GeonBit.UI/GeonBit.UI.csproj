@@ -58,6 +58,7 @@
     <Compile Include="Source\Animators\IAnimator.cs" />
     <Compile Include="Source\DrawUtils.cs" />
     <Compile Include="Source\Entities\Button.cs" />
+    <Compile Include="Source\Entities\ButtonGamePad.cs" />
     <Compile Include="Source\Entities\CheckBox.cs" />
     <Compile Include="Source\Entities\ColoredRectangle.cs" />
     <Compile Include="Source\Entities\DropDown.cs" />
