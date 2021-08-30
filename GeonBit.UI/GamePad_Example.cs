@@ -82,11 +82,11 @@ namespace GeonBit.UI
             _RootGridPanel.GetGridPanel(Anchor.Center).AddChild(panelGrid);
             _RootGridPanel.GetGridPanel(Anchor.TopCenter).AddChild(
                 new PanelBar(
-                    new Button("Test1", anchor: Anchor.AutoInline),
-                    new Button("Test2", anchor: Anchor.AutoInline),
-                    new Button("Test3", anchor: Anchor.AutoInline),
-                    new Button("Test4", anchor: Anchor.AutoInline),
-                    new Button("Test5", anchor: Anchor.AutoInline)
+                    new ButtonGamePad("Test1", anchor: Anchor.AutoInline),
+                    new ButtonGamePad("Test2", anchor: Anchor.AutoInline),
+                    new ButtonGamePad("Test3", anchor: Anchor.AutoInline),
+                    new ButtonGamePad("Test4", anchor: Anchor.AutoInline),
+                    new ButtonGamePad("Toggle", ButtonSkin.Alternative, anchor: Anchor.AutoInline) { ToggleMode = true }
                     ));
             _RootGridPanel.GetGridPanel(Anchor.TopRight).AddChild(
                 new PanelBar(
