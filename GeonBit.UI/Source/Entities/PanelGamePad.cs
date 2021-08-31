@@ -160,9 +160,9 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// Selects the PanelRoot.
         /// </summary>
-        protected void RootMode(bool comingFromRootGrid, bool raiseClickEvent = true)
+        protected void RootMode(bool comingFromRootGrid, bool raiseEvents = true)
         {
-            if (raiseClickEvent) OnClick?.Invoke(this);
+            if (raiseEvents) OnClick?.Invoke(this);
 
             //We are coming not from the RootGrid which means we are just coming from a RootPanel (from inner -> to outer).
             if (!comingFromRootGrid)
@@ -212,9 +212,9 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// Selects the first Panel from the PanelRoot.
         /// </summary>
-        protected void PanelModeIn(bool raiseClickEvent = true)
+        protected void PanelModeIn(bool raiseEvents = true)
         {
-            if (raiseClickEvent) OnClick?.Invoke(this);
+            if (raiseEvents) OnClick?.Invoke(this);
 
             //Deselect the RootPanel (DefaultSkin).
             Skin = GamePadSetup.DefaultSkin;
@@ -232,9 +232,9 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// Deselects the current panel content and enable all children of the PanelGrid again.
         /// </summary>
-        protected void PanelModeOut(bool raiseClickEvent = true)
+        protected void PanelModeOut(bool raiseEvents = true)
         {
-            if (raiseClickEvent) OnClick?.Invoke(this);
+            if (raiseEvents) OnClick?.Invoke(this);
 
             if (SelectedPanel == this)
             {
@@ -257,9 +257,9 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// Selects the first panel content in the currently selected panel of this PanelGrid.
         /// </summary>
-        protected void PanelContentMode(bool raiseClickEvent = true)
+        protected void PanelContentMode(bool raiseEvents = true)
         {
-            if (raiseClickEvent) SelectedPanel.OnClick?.Invoke(SelectedPanel);
+            if (raiseEvents) SelectedPanel.OnClick?.Invoke(SelectedPanel);
 
             //Create a list of selectable children.
             _SelectableChildren =
@@ -382,7 +382,7 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// Select the child at the current ChildrenIndex.
         /// </summary>
-        private void SelectCurrentChildIndex()
+        private void SelectCurrentChildIndex(bool raiseEvents = true)
         {
             //Enable all the children from the currently selected panel.
             _SelectableChildren.ForEach(
@@ -397,7 +397,29 @@ namespace GeonBit.UI.Source.Entities
             _SelectableChildren[ChildrenIndex].FillColor = GamePadSetup.SelectedColor;
             _SelectableChildren[ChildrenIndex].State = EntityState.MouseHover;
 
+            if (raiseEvents)
+            {
+                if (SelectedPanelContent != null)
+                {
+                    if (SelectedPanelContent is IEntityGamePad)
+                    {
+                        //Deselect old SelectedPanelContent.
+                        ((IEntityGamePad)SelectedPanelContent).TriggerOnDeSelect();
+                    }
+                }
+            }
+
+            //Set new SelectedPanelContent.
             SelectedPanelContent = _SelectableChildren[ChildrenIndex];
+
+            if (raiseEvents)
+            {
+                if (SelectedPanelContent is IEntityGamePad)
+                {
+                    //Select new SelectedPanelContent.
+                    ((IEntityGamePad)SelectedPanelContent).TriggerOnSelect();
+                }
+            }
         }
 
         #endregion Selection-Actions
@@ -538,21 +560,42 @@ namespace GeonBit.UI.Source.Entities
                     if (SelectionMode == SelectionMode.Panel) ResetPanelSelection();
                 }
 
-                if (_PanelContentClicked) 
+                if (SelectedPanelContent != null)
+                {
+                    if (SelectedPanelContent is IEntityGamePad)
+                    {
+                        if (UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.A))
+                        {
+                            ((IEntityGamePad)SelectedPanelContent).TriggerDoWhileButtonDown();
+                        }
+                        else ((IEntityGamePad)SelectedPanelContent).TriggerDoWhileHover();
+
+                        if (UserInterface.Active.GamePadInputProvider.GamePadButtonPressed(Buttons.A))
+                        {
+                            ((IEntityGamePad)SelectedPanelContent).TriggerOnButtonDown();
+                        }
+                        else if (UserInterface.Active.GamePadInputProvider.GamePadButtonReleased(Buttons.A))
+                        {
+                            ((IEntityGamePad)SelectedPanelContent).TriggerOnButtonReleased();
+                        }
+                    }
+                }
+
+                if (_PanelContentClicked)
                 {
                     if (_PanelContentClickedTimeOut < 0)
                     {
-                        _PanelContentClicked = false;                                               
+                        _PanelContentClicked = false;
 
                         if (ClickedPanelContent is IEntityGamePad)
                         {
-                            ((IEntityGamePad)ClickedPanelContent).TriggerOnClick();
+                            ((IEntityGamePad)ClickedPanelContent).TriggerOnButtonClick();
                         }
                         else ClickedPanelContent.OnClick?.Invoke(SelectedPanel);
 
                         _PanelContentClickedTimeOut = GamePadSetup.PanelContentClickedTimeOut;
 
-                        SelectCurrentChildIndex();
+                        SelectCurrentChildIndex(false);
                     }
                     else _PanelContentClickedTimeOut -= UserInterface.Active.CurrGameTime.ElapsedGameTime.TotalMilliseconds;
                 }
