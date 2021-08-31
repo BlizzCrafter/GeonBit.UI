@@ -17,13 +17,66 @@ namespace GeonBit.UI.Source.Entities
             Entity.MakeSerializable(typeof(ButtonGamePad));
         }
 
+        #region Events
+
         /// <summary>
-        /// Calls the DoOnClick event from the base entity.
+        /// Calls the DoOnClick() event internally.
         /// </summary>
-        public void TriggerOnClick()
+        public void TriggerOnButtonClick()
         {
             DoOnClick();
         }
+        /// <summary>
+        /// Calls the DoOnMouseEnter() event internally.
+        /// </summary>
+        public void TriggerOnSelect()
+        {
+            DoOnMouseEnter();
+        }
+        /// <summary>
+        /// Calls the DoOnMouseLeave() event internally.
+        /// </summary>
+        public void TriggerOnDeSelect()
+        {
+            DoOnMouseLeave();
+        }
+        /// <summary>
+        /// Calls the OnMouseDown() event internally.
+        /// </summary>
+        public void TriggerOnButtonDown()
+        {
+            DoOnMouseDown();
+        }
+        /// <summary>
+        /// Calls the DoWhileMouseDown() event internally.
+        /// </summary>
+        public void TriggerDoWhileButtonDown()
+        {
+            DoWhileMouseDown();
+        }
+        /// <summary>
+        /// Calls the DoWhileMouseHover() event internally.
+        /// </summary>
+        public void TriggerDoWhileHover()
+        {
+            DoWhileMouseHover();
+        }
+        /// <summary>
+        /// Calls the DoOnMouseReleased() event internally.
+        /// </summary>
+        public void TriggerOnButtonReleased()
+        {
+            DoOnMouseReleased();
+        }
+        /// <summary>
+        /// Calls the DoOnValueChange() event internally.
+        /// </summary>
+        public void TriggerOnValueChanged()
+        {
+            DoOnValueChange();
+        }
+
+        #endregion Events
 
         /// <summary>
         /// Create the gamepad supported button.
