@@ -73,7 +73,7 @@ namespace GeonBit.UI
                         panelGrid.Children[i].AddChild(new Header($"Panel - #{i}"));
 
                         // add some buttons
-                        panelGrid.Children[i].AddChild(new ButtonGamePad("Hello World", ButtonSkin.Default) { OnClick = SayHelloWorldClicked, Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) });
+                        panelGrid.Children[i].AddChild(new ButtonGamePad("Hello World", ButtonSkin.Default) { ToolTipText = $"This is Test-Tooltip #{i}", OnClick = SayHelloWorldClicked, Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) });
                         panelGrid.Children[i].AddChild(new ButtonGamePad("Toggle", ButtonSkin.Default) { ToggleMode = true, Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) });
                     }
                 }
@@ -82,10 +82,10 @@ namespace GeonBit.UI
             _RootGridPanel.GetGridPanel(Anchor.Center).AddChild(panelGrid);
             _RootGridPanel.GetGridPanel(Anchor.TopCenter).AddChild(
                 new PanelBar(
-                    new ButtonGamePad("Test1", anchor: Anchor.AutoInline),
-                    new ButtonGamePad("Test2", anchor: Anchor.AutoInline),
-                    new ButtonGamePad("Test3", anchor: Anchor.AutoInline),
-                    new ButtonGamePad("Test4", anchor: Anchor.AutoInline),
+                    new ButtonGamePad("Test1", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #1" },
+                    new ButtonGamePad("Test2", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #2" },
+                    new ButtonGamePad("Test3", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #3" },
+                    new ButtonGamePad("Test4", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #4" },
                     new ButtonGamePad("Toggle", ButtonSkin.Alternative, anchor: Anchor.AutoInline) { ToggleMode = true, Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) }
                     ));
             _RootGridPanel.GetGridPanel(Anchor.TopRight).AddChild(
@@ -98,8 +98,6 @@ namespace GeonBit.UI
                         Anchor.Center, scale: 2f) 
                         { AlignToCenter = true, WrapWords = false, BreakWordsIfMust = false, AddHyphenWhenBreakWord = false })
                     );
-
-            UserInterface.Active.MouseInputProvider.UpdateMousePosition(Vector2.Zero);
 
             base.Initialize();
         }

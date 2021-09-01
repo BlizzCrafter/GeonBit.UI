@@ -562,6 +562,9 @@ namespace GeonBit.UI.Source.Entities
 
                 if (SelectedPanelContent != null)
                 {
+                    targetEntity = SelectedPanelContent;
+                    UserInterface.Active.ActiveEntity = SelectedPanelContent;
+
                     if (SelectedPanelContent is IEntityGamePad)
                     {
                         if (UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.A))
