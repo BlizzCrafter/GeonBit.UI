@@ -218,6 +218,7 @@ namespace GeonBit.UI.Source.Entities
             {
                 if (Children[i] is Panel)
                 {
+                    Children[i].ClickThrough = true;
                     Children[i].Anchor = Anchor.AutoInline;
                     Children[i].Identifier = $"{GetIdentifier(HierarchyIdentifier.Panel)} #{i}";
                 }
