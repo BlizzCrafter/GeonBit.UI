@@ -71,6 +71,17 @@ namespace GeonBit.UI.Source.Entities
         }
 
         /// <summary>
+        /// This hides all empty panels in the Panel-Grid.
+        /// </summary>
+        public void HideEmptyPanels()
+        {
+            foreach (Panel panel in Children.OfType<Panel>().ToList())
+            {
+                if (panel.Children.Count == 0) panel.Visible = false;
+            }
+        }
+
+        /// <summary>
         /// This will be the used index when resetting the Panel-Selection.
         /// </summary>
         public void SetDefaultPanelIndex(Anchor anchor)
