@@ -84,6 +84,11 @@ namespace GeonBit.UI.Source.Entities
         public static Entity SelectedPanelContent { get; set; }
 
         /// <summary>
+        /// The name of this Panel. Useful to name panel tabs as well.
+        /// </summary>
+        public string Name { get; set; } = "Default";
+
+        /// <summary>
         /// Our current PanelIndex (selection).
         /// </summary>
         public int PanelIndex { get; protected set; }
@@ -198,7 +203,7 @@ namespace GeonBit.UI.Source.Entities
 
                     //Get the PanelGrid.
                     PanelGamePad panelGamePad =
-                                SelectedPanel.Find(GetIdentifier(HierarchyIdentifier.PanelGrid), true) as PanelGamePad;
+                                SelectedPanel.Find(GetIdentifier(HierarchyIdentifier.PanelGrid), true, false) as PanelGamePad;
 
                     //Unlock the PanelGrid (now we are leaving the RootGrid and coming to the inner selection [PanelGrid].
                     panelGamePad.LockPanelGrid = false;
