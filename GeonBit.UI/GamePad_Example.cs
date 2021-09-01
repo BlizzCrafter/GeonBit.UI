@@ -63,8 +63,8 @@ namespace GeonBit.UI
             _RootGridPanel = new PanelGrid(RootGridLayout.SmallCornersVerticals, Anchor.TopRight);
             UserInterface.Active.AddEntity(_RootGridPanel);
 
-            PanelGrid panelGrid = new PanelGrid(new Vector2(0, 0), 24, new Vector2(0.33f, -1), Anchor.AutoInline);
-            {
+            PanelGrid panelGrid = new PanelGrid(new Vector2(0, 0), 24, new Vector2(0.33f, -1), Anchor.AutoInline) { Name = "Panel Grid" };
+            {                
                 for (int i = 0; i < panelGrid.Children.Count; i++)
                 {
                     if (panelGrid.Children[i] is Panel)
@@ -79,7 +79,22 @@ namespace GeonBit.UI
                 }
             }
 
-            _RootGridPanel.GetGridPanel(Anchor.Center).AddChild(panelGrid);
+            PanelGrid selectListGrid = new PanelGrid(new Vector2(0, 0), 6, new Vector2(0.33f, -1), Anchor.AutoInline) { Name = "Select List" };
+            {
+                for (int i = 0; i < selectListGrid.Children.Count; i++)
+                {
+                    if (selectListGrid.Children[i] is Panel)
+                    {
+                        // add header
+                        selectListGrid.Children[i].AddChild(new Header($"Panel - #{i}"));
+                    }
+                }
+            }
+
+            _RootGridPanel.GetGridPanel(Anchor.Center).AddChild(
+                new PanelTabsGamePad(TabLocation.Top, 
+                    panelGrid, 
+                    selectListGrid));
             _RootGridPanel.GetGridPanel(Anchor.TopCenter).AddChild(
                 new PanelBar(
                     new ButtonGamePad("Button-1", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #1", Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) },
@@ -94,7 +109,7 @@ namespace GeonBit.UI
                     ));
             _RootGridPanel.GetGridPanel(Anchor.BottomCenter).AddChild(
                 new PanelBar(
-                        new RichParagraph(@"{{BUTTON_A}}A{{DEFAULT}}: Accept {{BUTTON_B}}B{{DEFAULT}}: Back {{DPAD}}DPad{{DEFAULT}}: Select", 
+                        new RichParagraph(@"{{BUTTON_A}}A{{DEFAULT}}: Accept {{BUTTON_B}}B{{DEFAULT}}: Back {{MONO}}DPad{{DEFAULT}}: Select {{MONO}}LB|RB{{DEFAULT}}: Switch", 
                         Anchor.Center, scale: 2f) 
                         { AlignToCenter = true, WrapWords = false, BreakWordsIfMust = false, AddHyphenWhenBreakWord = false })
                     );
