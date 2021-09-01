@@ -108,7 +108,7 @@ namespace GeonBit.UI.Source.Input
             RichParagraphStyleInstruction.AddInstruction("BUTTON_X", new RichParagraphStyleInstruction(ButtonX, FontStyle.Bold, 2));
             RichParagraphStyleInstruction.AddInstruction("BUTTON_Y", new RichParagraphStyleInstruction(ButtonY, FontStyle.Bold, 2));
             RichParagraphStyleInstruction.AddInstruction("BUTTON_B", new RichParagraphStyleInstruction(ButtonB, FontStyle.Bold, 2));
-            RichParagraphStyleInstruction.AddInstruction("DPAD", new RichParagraphStyleInstruction(Color.Black, FontStyle.Bold, 1, Color.WhiteSmoke));
+            RichParagraphStyleInstruction.AddInstruction("MONO", new RichParagraphStyleInstruction(Color.Black, FontStyle.Bold, 1, Color.WhiteSmoke));
         }
     }
 }
