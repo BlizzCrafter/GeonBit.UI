@@ -82,10 +82,10 @@ namespace GeonBit.UI
             _RootGridPanel.GetGridPanel(Anchor.Center).AddChild(panelGrid);
             _RootGridPanel.GetGridPanel(Anchor.TopCenter).AddChild(
                 new PanelBar(
-                    new ButtonGamePad("Test1", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #1" },
-                    new ButtonGamePad("Test2", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #2" },
-                    new ButtonGamePad("Test3", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #3" },
-                    new ButtonGamePad("Test4", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #4" },
+                    new ButtonGamePad("Button-1", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #1" },
+                    new ButtonGamePad("Button-2", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #2" },
+                    new ButtonGamePad("Button-3", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #3" },
+                    new ButtonGamePad("Button-4", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #4" },
                     new ButtonGamePad("Toggle", ButtonSkin.Alternative, anchor: Anchor.AutoInline) { ToggleMode = true, Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) }
                     ));
             _RootGridPanel.GetGridPanel(Anchor.TopRight).AddChild(
