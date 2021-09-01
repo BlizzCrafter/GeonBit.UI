@@ -37,7 +37,6 @@ namespace GeonBit.UI.Source.Entities
             for (int i = 0; i < entitiesCount; i++)
             {
                 entities[i].Size = new Vector2(1f / entitiesCount, 0);
-                entities[i].Identifier = GetIdentifier(HierarchyIdentifier.PanelContent);
                 AddChild(entities[i]);
             }
 
