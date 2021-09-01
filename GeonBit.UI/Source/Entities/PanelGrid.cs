@@ -194,6 +194,8 @@ namespace GeonBit.UI.Source.Entities
                 Scrollbar.Visible = false;
             }
 
+            Padding = new Vector2(16, 12);
+
             CreatePanelGrid(panelCount, panelSize);
 
             Identifier = GetIdentifier(HierarchyIdentifier.PanelGrid);
