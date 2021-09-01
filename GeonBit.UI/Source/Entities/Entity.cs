@@ -738,8 +738,9 @@ namespace GeonBit.UI.Entities
         /// <typeparam name="T">Entity type to get.</typeparam>
         /// <param name="identifier">Identifier to find.</param>
         /// <param name="recursive">If true, will search recursively in children of children. If false, will search only in direct children.</param>
+        /// <param name="skipHidden">If true it will skip the hidden entities.</param>
         /// <returns>First found entity with given identifier and type, or null if nothing found.</returns>
-        public T Find<T> (string identifier, bool recursive = false) where T : Entity
+        public T Find<T> (string identifier, bool recursive = false, bool skipHidden = true) where T : Entity
         {
             // should we return any entity type?
             bool anyType = typeof(T) == typeof(Entity);
@@ -748,7 +749,7 @@ namespace GeonBit.UI.Entities
             foreach (Entity child in _children)
             {
                 // skip hidden entities
-                if (child._hiddenInternalEntity)
+                if (child._hiddenInternalEntity && skipHidden)
                     continue;
 
                 // check if identifier and type matches - if so, return it
@@ -761,7 +762,7 @@ namespace GeonBit.UI.Entities
                 if (recursive)
                 {
                     // search in child
-                    T ret = child.Find<T>(identifier, recursive);
+                    T ret = child.Find<T>(identifier, recursive, skipHidden);
 
                     // if found return it
                     if (ret != null)
@@ -780,10 +781,11 @@ namespace GeonBit.UI.Entities
         /// </summary>
         /// <param name="identifier">Identifier to find.</param>
         /// <param name="recursive">If true, will search recursively in children of children. If false, will search only in direct children.</param>
+        /// <param name="skipHidden">If true it will skip the hidden entities.</param>
         /// <returns>First found entity with given identifier, or null if nothing found.</returns>
-        public Entity Find(string identifier, bool recursive = false)
+        public Entity Find(string identifier, bool recursive = false, bool skipHidden = true)
         {
-            return Find<Entity>(identifier, recursive);
+            return Find<Entity>(identifier, recursive, skipHidden);
         }
 
         /// <summary>
