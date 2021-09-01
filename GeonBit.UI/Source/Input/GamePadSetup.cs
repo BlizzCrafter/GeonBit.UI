@@ -28,8 +28,8 @@ namespace GeonBit.UI.Source.Input
                 // get dest rect and calculate tooltip position based on size and mouse position
                 var destRect = tooltip.GetActualDestRect();
                 var sourceVec = new Vector2(
-                    source.GetActualDestRect().X + source.GetActualDestRect().Width / 2, 
-                    source.GetActualDestRect().Y + source.GetActualDestRect().Height);
+                    source.GetActualDestRect().X + source.GetActualDestRect().Width / 2f, 
+                    source.GetActualDestRect().Y + source.GetActualDestRect().Height / UserInterface.Active.GlobalScale);
                 var position = sourceVec + source.Padding + new Vector2(-destRect.Width / 2, -destRect.Height - 20);
 
                 // make sure tooltip is not out of screen boundaries
