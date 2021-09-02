@@ -166,6 +166,10 @@ namespace GeonBit.UI.Source.Entities
             _ButtonsPanel = Find<Panel>("_buttonsPanel", true, false);
             _PanelsPanel = Find<Panel>("_panelsPanel", true, false);
 
+            _ButtonsPanel.FillColor = new Color();
+            _PanelsPanel.FillColor = new Color();
+            _PanelsPanel.Padding = new Vector2(8, 0);
+
             if (_TabLocation == TabLocation.Bottom) _PanelsPanel.SendToBack();
             else if (_TabLocation == TabLocation.Invisible) _ButtonsPanel.Visible = false;
 
