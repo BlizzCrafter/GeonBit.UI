@@ -84,11 +84,13 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// This will be the used index when resetting the Panel-Selection.
         /// </summary>
-        public void SetDefaultPanelIndex(Anchor anchor)
+        public override void SetDefaultPanelIndex(Anchor anchor)
         {
             int defaultIndex = GetGridPanelIndex(anchor);
 
             DefaultPanelIndex = defaultIndex == -1 ? 0 : defaultIndex;
+
+            base.SetDefaultPanelIndex(anchor);
         }
 
         /// <summary>

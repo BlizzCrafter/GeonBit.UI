@@ -92,6 +92,7 @@ namespace GeonBit.UI.Source.Entities
         /// Our current PanelIndex (selection).
         /// </summary>
         public int PanelIndex { get; protected set; }
+        private int _OldPanelIndex;
         /// <summary>
         /// This will be the used index when resetting the Panel-Selection.
         /// </summary>
@@ -302,14 +303,25 @@ namespace GeonBit.UI.Source.Entities
         }
 
         /// <summary>
+        /// This will be the used index when resetting the Panel-Selection.
+        /// </summary>
+        public virtual void SetDefaultPanelIndex(Anchor anchor)
+        {
+            _OldPanelIndex = DefaultPanelIndex;
+        }
+
+        /// <summary>
         /// Selects a panel from the PanelGrid.
         /// </summary>
         /// <param name="direction">The direction in which the index should try to shift.</param>
-        protected virtual void SelectPanel(PanelDirection direction) 
+        protected virtual void SelectPanel(PanelDirection direction)
         {
             ClickedPanelContent = null;
 
-            if (PanelIndex < 0 || PanelIndex > Children.OfType<Panel>().Count() - 1) PanelIndex = 0;
+            var panelChildren = Children.OfType<Panel>().ToList();
+
+            if (PanelIndex < 0 || PanelIndex > panelChildren.Count - 1) PanelIndex = 0;
+            if (panelChildren.Count > 0 && !panelChildren[PanelIndex].Visible) PanelIndex = _OldPanelIndex;
 
             UpdatePanelSelection(direction);
         }
@@ -352,6 +364,8 @@ namespace GeonBit.UI.Source.Entities
             {
                 Skin = PanelSkin.None;
             }
+
+            _OldPanelIndex = PanelIndex;
         }
 
         /// <summary>
