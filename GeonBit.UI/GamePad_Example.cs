@@ -60,11 +60,11 @@ namespace GeonBit.UI
 
         private void InitGamePadExample()
         {
-            _RootGridPanel = new PanelGrid(RootGridLayout.SmallCorners, Anchor.TopRight);
+            _RootGridPanel = new PanelGrid(RootGridLayout.SmallCorners, Anchor.TopRight) { Name = "Root Grid" };
             UserInterface.Active.AddEntity(_RootGridPanel);
 
             PanelGrid panelGrid = new PanelGrid(new Vector2(0, 0), 24, new Vector2(0.33f, -1), Anchor.AutoInline) { Name = "Panel Grid" };
-            {                
+            {
                 for (int i = 0; i < panelGrid.Children.Count; i++)
                 {
                     if (panelGrid.Children[i] is Panel)
@@ -79,22 +79,20 @@ namespace GeonBit.UI
                 }
             }
 
-            PanelGrid selectListGrid = new PanelGrid(new Vector2(0, 0), 6, new Vector2(0.33f, -1), Anchor.AutoInline) { Name = "Select List" };
-            {
-                for (int i = 0; i < selectListGrid.Children.Count; i++)
-                {
-                    if (selectListGrid.Children[i] is Panel)
-                    {
-                        // add header
-                        selectListGrid.Children[i].AddChild(new Header($"Panel - #{i}"));
-                    }
-                }
-            }
+            SelectListPanel selectListPanel = new SelectListPanel(new Vector2(0, 0),
+                items: new string[] 
+                { 
+                    "Test1", 
+                    "Test2", 
+                    "Test3", 
+                    "Test4" 
+                }) { Name = "Select List" };
 
             _RootGridPanel.GetGridPanel(Anchor.Center).AddChild(
                 new PanelTabsGamePad(TabLocation.Top, 
-                    panelGrid, 
-                    selectListGrid));
+                    panelGrid,
+                    selectListPanel));
+
             _RootGridPanel.GetGridPanel(Anchor.TopCenter).AddChild(
                 new PanelBar(
                     new ButtonGamePad("Button-1", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #1", Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) },
@@ -103,10 +101,12 @@ namespace GeonBit.UI
                     new ButtonGamePad("Button-4", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #4", Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) },
                     new ButtonGamePad("Toggle", ButtonSkin.Alternative, anchor: Anchor.AutoInline) { ToggleMode = true, Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) }
                     ));
+
             _RootGridPanel.GetGridPanel(Anchor.TopRight).AddChild(
                 new PanelBar(
                         new Icon(IconType.Heart, Anchor.Center) { MinSize = new Vector2(0, 0) } 
                     ));
+
             _RootGridPanel.GetGridPanel(Anchor.BottomCenter).AddChild(
                 new PanelBar(
                         new RichParagraph(@"{{BUTTON_A}}A{{DEFAULT}}: Accept {{BUTTON_B}}B{{DEFAULT}}: Back {{MONO}}DPad{{DEFAULT}}: Select {{MONO}}LB|RB{{DEFAULT}}: Switch", 
@@ -124,7 +124,7 @@ namespace GeonBit.UI
 
             _MessageBox = new MessageBoxGamePad();
             _MessageBox.ShowMessageBox(
-                $"Message from {PanelGamePad.GetIdentifier(entity.Parent.Identifier)}",
+                $"{PanelGamePad.GetIdentifier(entity.Parent.Identifier)}",
                 "Hello, GamePad-User!",
                 MessageBoxOptions());
         }

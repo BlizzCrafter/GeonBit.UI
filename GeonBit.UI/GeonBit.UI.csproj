@@ -85,6 +85,8 @@
     <Compile Include="Source\Entities\RadioButton.cs" />
     <Compile Include="Source\Entities\RootPanel.cs" />
     <Compile Include="Source\Entities\SelectList.cs" />
+    <Compile Include="Source\Entities\SelectListGamePad.cs" />
+    <Compile Include="Source\Entities\SelectListPanel.cs" />
     <Compile Include="Source\Entities\Slider.cs" />
     <Compile Include="Source\Entities\StyleSheet.cs" />
     <Compile Include="Source\Entities\TextInput.cs" />
