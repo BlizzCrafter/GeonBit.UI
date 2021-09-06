@@ -258,7 +258,7 @@ namespace GeonBit.UI.Source.Entities
             {
                 PanelIndex--;
 
-                if (PanelIndex < _StartOfTheRow) PanelIndex = _EndOfTheRow;
+                if (PanelIndex < 0) PanelIndex = _EndOfTheRow;
             }
             else if (direction == PanelDirection.Down)
             {
