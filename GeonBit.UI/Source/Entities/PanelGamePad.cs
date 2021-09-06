@@ -229,8 +229,12 @@ namespace GeonBit.UI.Source.Entities
                     selectedPanelGamePad.LockPanelGrid = false;
                 }
             }
-            
+
             //Deselect PanelContent.
+            if (SelectedPanelContent is IEntityGamePad)
+            {
+                ((IEntityGamePad)SelectedPanelContent).TriggerOnDeSelect();
+            }
             SelectedPanelContent = null;
         }
 
@@ -293,6 +297,9 @@ namespace GeonBit.UI.Source.Entities
         {
             if (raiseEvents) SelectedPanel.OnClick?.Invoke(SelectedPanel);
 
+            //NextMod: from Panel -> to PanelContent selection.
+            SelectionMode = SelectionMode.PanelContent;
+
             //Create a list of selectable children.
             _SelectableChildren =
                 SelectedPanel
@@ -300,19 +307,14 @@ namespace GeonBit.UI.Source.Entities
                 .Where(x => x.Identifier == GetIdentifier(HierarchyIdentifier.PanelContent)).ToList();
 
             //Check if we found any selectable children. If yes change selection mode to PanelContent.
-            if (_SelectableChildren != null && _SelectableChildren.Count > 0)
-            {
-                //Reset ChildrenIndex to start child selection from the first index again.
-                ChildrenIndex = 0;
 
-                //NextMod: from Panel -> to PanelContent selection.
-                SelectionMode = SelectionMode.PanelContent;
+            //Reset ChildrenIndex to start child selection from the first index again.
+            ChildrenIndex = 0;
 
-                //Disable all children from the whole panel.
-                SetChildrenEnabled(SelectionState.Disabled);
-                //Select the child at the current ChildIndex.
-                SelectCurrentChildIndex();
-            }
+            //Disable all children from the whole panel.
+            SetChildrenEnabled(SelectionState.Disabled);
+            //Select the child at the current ChildIndex.
+            SelectCurrentChildIndex();
         }
 
         #endregion Selection-Modes
@@ -415,10 +417,10 @@ namespace GeonBit.UI.Source.Entities
         }
 
         /// <summary>
-        /// Set the ChildIndex based on the PanelDirection and select the child.
+        /// Set the ChildIndex based on the PanelDirection and select the content.
         /// </summary>
         /// <param name="direction">The panel direction we want to shift to.</param>
-        protected void SetAndSelectCurrentChild(PanelDirection direction)
+        protected virtual void SelectContent(PanelDirection direction)
         {
             if (direction == PanelDirection.Down || direction == PanelDirection.Right)
             {
@@ -439,40 +441,44 @@ namespace GeonBit.UI.Source.Entities
         /// </summary>
         private void SelectCurrentChildIndex(bool raiseEvents = true)
         {
-            //Enable all the children from the currently selected panel.
-            _SelectableChildren.ForEach(
-                x =>
-                {
-                    x.Enabled = true;
-                    x.FillColor = GamePadSetup.DefaultColor;
-                    x.State = EntityState.Default;
-                });
-
-            //Add selected color and state to the currently selected child.
-            _SelectableChildren[ChildrenIndex].FillColor = GamePadSetup.SelectedColor;
-            _SelectableChildren[ChildrenIndex].State = EntityState.MouseHover;
-
-            if (raiseEvents)
+            if (_SelectableChildren != null && _SelectableChildren.Count > 0)
             {
-                if (SelectedPanelContent != null)
+                //We don't tint entities like SelectLists.
+                if (_SelectableChildren[ChildrenIndex] is SelectListGamePad == false)
                 {
-                    if (SelectedPanelContent is IEntityGamePad)
-                    {
-                        //Deselect old SelectedPanelContent.
-                        ((IEntityGamePad)SelectedPanelContent).TriggerOnDeSelect();
-                    }
+                    //Enable all the children from the currently selected panel.
+                    _SelectableChildren.ForEach(
+                        x =>
+                        {
+                            x.Enabled = true;
+                            x.FillColor = GamePadSetup.DefaultColor;
+                            x.State = EntityState.Default;
+                        });
+
+                    //Add selected color and state to the currently selected child.
+                    _SelectableChildren[ChildrenIndex].FillColor = GamePadSetup.SelectedColor;
+                    _SelectableChildren[ChildrenIndex].State = EntityState.MouseHover;
                 }
+
+                //Deselect old SelectedPanelContent.
+                SelectedPanelContentTrigger(false, raiseEvents);
+
+                //Set new SelectedPanelContent.
+                SelectedPanelContent = _SelectableChildren[ChildrenIndex];
+
+                //Select new SelectedPanelContent.
+                SelectedPanelContentTrigger(true, raiseEvents);
             }
+        }
 
-            //Set new SelectedPanelContent.
-            SelectedPanelContent = _SelectableChildren[ChildrenIndex];
-
+        private void SelectedPanelContentTrigger(bool select, bool raiseEvents)
+        {
             if (raiseEvents)
             {
-                if (SelectedPanelContent is IEntityGamePad)
+                if (SelectedPanelContent != null && SelectedPanelContent is IEntityGamePad)
                 {
-                    //Select new SelectedPanelContent.
-                    ((IEntityGamePad)SelectedPanelContent).TriggerOnSelect();
+                    if (select) ((IEntityGamePad)SelectedPanelContent).TriggerOnSelect();
+                    else ((IEntityGamePad)SelectedPanelContent).TriggerOnDeSelect();
                 }
             }
         }
@@ -498,38 +504,42 @@ namespace GeonBit.UI.Source.Entities
             Children.ToList().ForEach(
                             entity =>
                             {
-                                if (entity.Identifier == GetIdentifier(HierarchyIdentifier.PanelContent))
+                                //We don't tint panels like SelectLists.
+                                if (entity is SelectListGamePad == false)
                                 {
-                                    if (selectionState == SelectionState.Enabled)
-                                    {
-                                        entity.Enabled = true;
-                                        entity.FillColor = GamePadSetup.DefaultColor;
-                                        entity.State = EntityState.Default;
-                                    }
-                                    else if (selectionState == SelectionState.Disabled)
-                                    {
-                                        entity.Enabled = false;
-                                        entity.State = EntityState.Default;
-                                    }
-                                }
-                
-                                entity.Children.Where(
-                                    child => child.Identifier == GetIdentifier(HierarchyIdentifier.PanelContent)).ToList().ForEach(
-                                    selectable =>
+                                    if (entity.Identifier == GetIdentifier(HierarchyIdentifier.PanelContent))
                                     {
                                         if (selectionState == SelectionState.Enabled)
                                         {
-                                            selectable.Enabled = true;
-                                            selectable.FillColor = GamePadSetup.DefaultColor;
-                                            selectable.State = EntityState.Default;
+                                            entity.Enabled = true;
+                                            entity.FillColor = GamePadSetup.DefaultColor;
+                                            entity.State = EntityState.Default;
                                         }
                                         else if (selectionState == SelectionState.Disabled)
                                         {
-                                            selectable.Enabled = false;
-                                            selectable.State = EntityState.Default;
+                                            entity.Enabled = false;
+                                            entity.State = EntityState.Default;
                                         }
-                                    });
-                            });
+                                    }
+
+                                    entity.Children.Where(
+                                        child => child.Identifier == GetIdentifier(HierarchyIdentifier.PanelContent)).ToList().ForEach(
+                                        selectable =>
+                                        {
+                                            if (selectionState == SelectionState.Enabled)
+                                            {
+                                                selectable.Enabled = true;
+                                                selectable.FillColor = GamePadSetup.DefaultColor;
+                                                selectable.State = EntityState.Default;
+                                            }
+                                            else if (selectionState == SelectionState.Disabled)
+                                            {
+                                                selectable.Enabled = false;
+                                                selectable.State = EntityState.Default;
+                                            }
+                                        });
+                                }
+                            }); 
         }
 
         /// <summary>
@@ -595,22 +605,22 @@ namespace GeonBit.UI.Source.Entities
                 if (UserInterface.Active.GamePadInputProvider.GamePadButtonPressed(Buttons.DPadRight))
                 {
                     if (SelectionMode == SelectionMode.Panel) SelectPanel(PanelDirection.Right);
-                    else if (SelectionMode == SelectionMode.PanelContent) SetAndSelectCurrentChild(PanelDirection.Right);
+                    else if (SelectionMode == SelectionMode.PanelContent) SelectContent(PanelDirection.Right);
                 }
                 else if (UserInterface.Active.GamePadInputProvider.GamePadButtonPressed(Buttons.DPadLeft))
                 {
                     if (SelectionMode == SelectionMode.Panel) SelectPanel(PanelDirection.Left);
-                    else if (SelectionMode == SelectionMode.PanelContent) SetAndSelectCurrentChild(PanelDirection.Left);
+                    else if (SelectionMode == SelectionMode.PanelContent) SelectContent(PanelDirection.Left);
                 }
                 else if (UserInterface.Active.GamePadInputProvider.GamePadButtonPressed(Buttons.DPadDown))
                 {
                     if (SelectionMode == SelectionMode.Panel) SelectPanel(PanelDirection.Down);
-                    else if (SelectionMode == SelectionMode.PanelContent) SetAndSelectCurrentChild(PanelDirection.Down);
+                    else if (SelectionMode == SelectionMode.PanelContent) SelectContent(PanelDirection.Down);
                 }
                 else if (UserInterface.Active.GamePadInputProvider.GamePadButtonPressed(Buttons.DPadUp))
                 {
                     if (SelectionMode == SelectionMode.Panel) SelectPanel(PanelDirection.Up);
-                    else if (SelectionMode == SelectionMode.PanelContent) SetAndSelectCurrentChild(PanelDirection.Up);
+                    else if (SelectionMode == SelectionMode.PanelContent) SelectContent(PanelDirection.Up);
                 }
 
                 if (UserInterface.Active.GamePadInputProvider.GamePadButtonPressed(Buttons.Back))
