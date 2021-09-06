@@ -59,6 +59,11 @@ namespace GeonBit.UI.Source.Input
         public static Color SelectedColor = Color.LightPink;
 
         /// <summary>
+        /// LIST_TITLE color.
+        /// </summary>
+        public static Color ListTitle = new Color(155, 74, 240);
+
+        /// <summary>
         /// Xbox Button_A color.
         /// </summary>
         public static Color ButtonA = new Color(60, 219, 78);
@@ -104,6 +109,7 @@ namespace GeonBit.UI.Source.Input
             UserInterface.Active.MouseInputProvider.UpdateMousePosition(Vector2.Zero);
             UserInterface.Active.GenerateTooltipFunc = GenerateGamePadTooltipFunc;
 
+            RichParagraphStyleInstruction.AddInstruction("LIST_TITLE", new RichParagraphStyleInstruction(ListTitle, FontStyle.Bold, 2));
             RichParagraphStyleInstruction.AddInstruction("BUTTON_A", new RichParagraphStyleInstruction(ButtonA, FontStyle.Bold, 2));
             RichParagraphStyleInstruction.AddInstruction("BUTTON_X", new RichParagraphStyleInstruction(ButtonX, FontStyle.Bold, 2));
             RichParagraphStyleInstruction.AddInstruction("BUTTON_Y", new RichParagraphStyleInstruction(ButtonY, FontStyle.Bold, 2));
