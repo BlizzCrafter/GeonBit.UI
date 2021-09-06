@@ -183,7 +183,7 @@ namespace GeonBit.UI.Source.Entities
                 //Deselect the SelectedPanel if available (DefaultSkin, DefaultColor, NoColor).
                 DeselectSelectedPanel();
 
-                //Deselect the selected root panel by using the _SelectedIdentifier - previously set by coming from the PanelGrid.
+                //Select the selected root panel by using the _SelectedIdentifier - previously set by coming from the PanelGrid.
                 Panel selectedRootPanel = UserInterface.Active.Root.Find(_SelectedIdentifier, true) as Panel;
                 selectedRootPanel.Skin = GamePadSetup.SelectedSkin;
 
@@ -208,15 +208,25 @@ namespace GeonBit.UI.Source.Entities
                     //Deselect the SelectedPanel if available (DefaultSkin, DefaultColor, NoColor).
                     DeselectSelectedPanel();
 
-                    //Get the PanelGrid.
-                    PanelGamePad panelGamePad =
-                                SelectedPanel.Find(GetIdentifier(HierarchyIdentifier.PanelGrid), true, false) as PanelGamePad;
+                    PanelGamePad selectedPanelGamePad = null;
+
+                    PanelTabsGamePad panelTabs = SelectedPanel.Children.ToList().Find(x => x is PanelTabsGamePad) as PanelTabsGamePad;
+                    if (panelTabs != null)
+                    {
+                        selectedPanelGamePad = panelTabs
+                            .Find($"{GetIdentifier(HierarchyIdentifier.PanelGrid)}:{panelTabs.PanelIndex}", true, false) as PanelGamePad;
+                    }
+                    else
+                    {
+                        selectedPanelGamePad = SelectedPanel
+                            .Find(GetIdentifier(HierarchyIdentifier.PanelGrid), true, false) as PanelGamePad;
+                    }
 
                     //Set the _SelectedIdentifier in the PanelGrid so that we can find it when coming from the RootGrid.
-                    panelGamePad._SelectedIdentifier = SelectedPanel.Identifier;
+                    selectedPanelGamePad._SelectedIdentifier = SelectedPanel.Identifier;
 
                     //Unlock the PanelGrid (now we are leaving the RootGrid and coming to the inner selection [PanelGrid].
-                    panelGamePad.LockPanelGrid = false;
+                    selectedPanelGamePad.LockPanelGrid = false;
                 }
             }
             
@@ -534,6 +544,9 @@ namespace GeonBit.UI.Source.Entities
                Vector2? offset = null)
                : base(size, GamePadSetup.DefaultSkin, anchor, offset)
         {
+            //A PanelGamePad is a PanelGrid by default.
+            Identifier = GetIdentifier(HierarchyIdentifier.PanelGrid);
+
             //Fires the PanelContent.OnClick event after the timeout.
             //Define the timeout with the GamePadSetup class - not here!
             _PanelContentClickedTimeOut = GamePadSetup.PanelContentClickedTimeOut;
@@ -650,6 +663,15 @@ namespace GeonBit.UI.Source.Entities
             }
 
             base.Update(ref targetEntity, ref dragTargetEntity, ref wasEventHandled, scrollVal);
+        }
+
+        /// <summary>
+        /// Returns either the Identifier or the base type.
+        /// Easier identification when debugging.
+        /// </summary>
+        public override string ToString()
+        {
+            return string.IsNullOrEmpty(Identifier) ? base.ToString() : Identifier;
         }
     }
 }

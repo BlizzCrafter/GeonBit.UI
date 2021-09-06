@@ -40,8 +40,6 @@ namespace GeonBit.UI.Source.Entities
                 AddChild(entities[i]);
             }
 
-            Identifier = GetIdentifier(HierarchyIdentifier.PanelGrid);
-
             InvisiblePanel = true;
         }
     }

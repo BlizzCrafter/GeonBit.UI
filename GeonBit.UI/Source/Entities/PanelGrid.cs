@@ -160,7 +160,11 @@ namespace GeonBit.UI.Source.Entities
             Anchor defaultPanelSelection = Anchor.TopLeft)
             : this(Vector2.Zero, Anchor.Center, null)
         {
+            //This is the RootGrid.
             Identifier = GetIdentifier(HierarchyIdentifier.RootGrid);
+
+            //It shouldn't be locked at the beginning, because it's the first entity.
+            LockPanelGrid = false;
 
             PanelOverflowBehavior = PanelOverflowBehavior.Overflow;
 
@@ -173,8 +177,6 @@ namespace GeonBit.UI.Source.Entities
             Padding = Vector2.Zero;
             SpaceAfter = Vector2.Zero;
             SpaceBefore = Vector2.Zero;
-
-            LockPanelGrid = false; //The RootPanel shouldn't be locked at the beginning, because it's the first entity.
 
             SetDefaultPanelIndex(defaultPanelSelection);
             PanelModeIn(false);
@@ -199,8 +201,6 @@ namespace GeonBit.UI.Source.Entities
             : this(size, anchor, offset)
         {
             if (panelCount % 3 != 0) throw new Exceptions.InvalidValueException("PanelCount must be a multitude of 3! E.g. 3, 6, 9 etc.");
-
-            Identifier = GetIdentifier(HierarchyIdentifier.PanelGrid);
 
             if (panelCount > 6)
             {

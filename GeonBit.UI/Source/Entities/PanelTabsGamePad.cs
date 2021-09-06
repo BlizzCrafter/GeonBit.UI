@@ -39,10 +39,14 @@ namespace GeonBit.UI.Source.Entities
             Entity.MakeSerializable(typeof(PanelTabsGamePad));
         }
 
+        /// <summary>
+        /// Get the selected panel index.
+        /// </summary>
+        public int PanelIndex { get; private set; }
+
         private TabLocation _TabLocation = TabLocation.Top;
         private Panel _InternalRootPanel, _PanelsPanel, _ButtonsPanel;
 
-        private int _PanelIndex = 0;
         private int _PanelTabCount;
 
         #region Events
@@ -111,8 +115,8 @@ namespace GeonBit.UI.Source.Entities
         /// </summary>
         public void NextTab()
         {
-            if (_PanelIndex + 1 > _PanelsPanel.Children.Count - 1) _PanelIndex = 0;
-            else _PanelIndex++;
+            if (PanelIndex + 1 > _PanelsPanel.Children.Count - 1) PanelIndex = 0;
+            else PanelIndex++;
 
             SelectTabIndex(_PanelsPanel);
         }
@@ -122,15 +126,15 @@ namespace GeonBit.UI.Source.Entities
         /// </summary>
         public void PreviousTab()
         {
-            if (_PanelIndex - 1 < 0) _PanelIndex = _PanelsPanel.Children.Count - 1;
-            else _PanelIndex--;
+            if (PanelIndex - 1 < 0) PanelIndex = _PanelsPanel.Children.Count - 1;
+            else PanelIndex--;
 
             SelectTabIndex(_PanelsPanel);
         }
 
         private void SelectTabIndex(Entity panelsPanel)
         {
-            var tabData = panelsPanel.Children[_PanelIndex].AttachedData as TabData;
+            var tabData = panelsPanel.Children[PanelIndex].AttachedData as TabData;
             string nextPanelName = tabData.name;
 
             SelectTab(nextPanelName);
@@ -159,6 +163,7 @@ namespace GeonBit.UI.Source.Entities
 
             for (int i = 0; i < _PanelTabCount; i++)
             {
+                panelGamePadTabs[i].Identifier += $":{i}";
                 AddTab(panelGamePadTabs[i].Name, panelGamePadTabs[i]);
             }
 
