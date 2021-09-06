@@ -33,7 +33,7 @@ namespace GeonBit.UI.Source.Entities
             DoOnMouseEnter();
 
             //Initial selection. This is happening automatically without user input.
-            if (SelectedIndex == -1) SelectedIndex = 0;
+            if (!HasSelectedValue) SelectNextItem();
         }
         /// <summary>
         /// Calls the DoOnMouseLeave() event internally.
@@ -84,15 +84,66 @@ namespace GeonBit.UI.Source.Entities
         #endregion Events
 
         /// <summary>
+        /// Select the next item in the SelectList.
+        /// </summary>
+        public void SelectNextItem()
+        {
+            int selection = SelectedIndex;
+            selection = NextItemCheck(selection);
+
+            while (LockedItems.ContainsKey(selection) && LockedItems[selection])
+            {
+                selection = NextItemCheck(selection);
+            }
+
+            SelectedIndex = selection;
+            ScrollToSelected();
+        }
+        private int NextItemCheck(int selection)
+        {
+            selection++;
+            return MaxCountCheck(selection);
+        }
+        private int MaxCountCheck(int value)
+        {
+            if (value > Count - 1) return 0;
+            else return value;
+        }
+
+        /// <summary>
+        /// Select the previous item in the SelectList.
+        /// </summary>
+        public void SelectPreviousItem()
+        {
+            int selection = SelectedIndex;
+            selection = PreviousItemCheck(selection);
+
+            while (LockedItems.ContainsKey(selection) && LockedItems[selection])
+            {
+                selection = PreviousItemCheck(selection);
+            }
+
+            SelectedIndex = selection;
+            ScrollToSelected();
+        }
+        private int PreviousItemCheck(int selection)
+        {
+            selection--;
+            return MinCountCheck(selection);
+        }
+        private int MinCountCheck(int value)
+        {
+            if (value < 0) return Count - 1;
+            else return value;
+        }
+
+        /// <summary>
         /// Create the select list with gamepad support.
         /// </summary>
-        /// <param name="lockFirstIndex">Locks the first entry. Useful for headers in table like lists.</param>
         /// <param name="items">The items you want to add to the SelectList.</param>
-        public SelectListGamePad(bool lockFirstIndex = true, params string[] items)
+        public SelectListGamePad(params string[] items)
             : base(Vector2.Zero, Anchor.Auto, Vector2.Zero, PanelSkin.ListBackground)
         {
-            LockedItems[0] = lockFirstIndex;
-
             for (int i = 0; i < items.Length; i++)
             {
                 AddItem(items[i]);
