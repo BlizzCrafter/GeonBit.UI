@@ -78,18 +78,45 @@ namespace GeonBit.UI
                     }
                 }
             }
+            
 
-            SelectListPanel selectListPanel = new SelectListPanel(new Vector2(0, 0),
-                items: new string[] 
+            SelectListPanel selectListPanel = new SelectListPanel(new Vector2(0, 0), anchor: Anchor.TopCenter,
+                headline: new RichParagraph(System.String.Format(
+                    "{0,-8} {1,-8} {2,-8} {3,-8} {4,-8} {5,-8} {6,-8}", "{{LIST_TITLE}}", 
+                    "Name", "Class", "Level", "Test1", "Test2", "Test3"), Anchor.TopLeft, scale: 1.6f)
                 { 
-                    "Test1", 
-                    "Test2", 
-                    "Test3", 
-                    "Test4" 
+                    WrapWords = false, 
+                    BreakWordsIfMust = false, 
+                    AddHyphenWhenBreakWord = false 
+                },
+                items: new string[] 
+                {
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Joe", "Mage", "5", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Ron", "Monk", "7", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Alex", "Rogue", "3", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Jim", "Paladin", "7", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Abe", "Cleric", "8", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "James", "Warlock", "20", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Bob", "Bard", "1", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Joe", "Mage", "5", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Ron", "Monk", "7", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Alex", "Rogue", "3", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Jim", "Paladin", "7", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Abe", "Cleric", "8", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "James", "Warlock", "20", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Bob", "Bard", "1", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Joe", "Mage", "5", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Ron", "Monk", "7", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Alex", "Rogue", "3", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Jim", "Paladin", "7", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Abe", "Cleric", "8", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "James", "Warlock", "20", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Bob", "Bard", "1", "Test1", "Test2", "Test3")
                 }) { Name = "Select List" };
+            selectListPanel.SelectListGamePad.ItemsScale = 1.3f;
 
             _RootGridPanel.GetGridPanel(Anchor.Center).AddChild(
-                new PanelTabsGamePad(TabLocation.Top, 
+                new PanelTabsGamePad(TabLocation.Top,
                     panelGrid,
                     selectListPanel));
 
