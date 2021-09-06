@@ -136,6 +136,7 @@ namespace GeonBit.UI.Source.Entities
         /// The currently selected Panel.
         /// </summary>
         protected Panel SelectedPanel { get; set; }
+        private string _SelectedIdentifier;
 
         private List<Entity> _SelectableChildren = new List<Entity>();
         private bool _PanelContentClicked;
@@ -180,9 +181,11 @@ namespace GeonBit.UI.Source.Entities
                 SelectionMode = SelectionMode.PanelRoot;
 
                 //Deselect the SelectedPanel if available (DefaultSkin, DefaultColor, NoColor).
-                SelectedPanel.Skin = GamePadSetup.DefaultSkin;
-                if (InvisiblePanel) SelectedPanel.FillColor = new Color();
-                else SelectedPanel.FillColor = GamePadSetup.DefaultColor;
+                DeselectSelectedPanel();
+
+                //Deselect the selected root panel by using the _SelectedIdentifier - previously set by coming from the PanelGrid.
+                Panel selectedRootPanel = UserInterface.Active.Root.Find(_SelectedIdentifier, true) as Panel;
+                selectedRootPanel.Skin = GamePadSetup.SelectedSkin;
 
                 //Lock the PanelRoot (preperation for RootGrid(outer)-Selection).
                 LockPanelGrid = true;
@@ -202,9 +205,15 @@ namespace GeonBit.UI.Source.Entities
                     //Yes, so we are locking the RootGrid.
                     LockPanelGrid = true;
 
+                    //Deselect the SelectedPanel if available (DefaultSkin, DefaultColor, NoColor).
+                    DeselectSelectedPanel();
+
                     //Get the PanelGrid.
                     PanelGamePad panelGamePad =
                                 SelectedPanel.Find(GetIdentifier(HierarchyIdentifier.PanelGrid), true, false) as PanelGamePad;
+
+                    //Set the _SelectedIdentifier in the PanelGrid so that we can find it when coming from the RootGrid.
+                    panelGamePad._SelectedIdentifier = SelectedPanel.Identifier;
 
                     //Unlock the PanelGrid (now we are leaving the RootGrid and coming to the inner selection [PanelGrid].
                     panelGamePad.LockPanelGrid = false;
@@ -227,6 +236,13 @@ namespace GeonBit.UI.Source.Entities
 
             //Give the RootPanel a selected color (shows the end-user that the RootPanel is currently active).
             FillColor = GamePadSetup.SelectedColor;
+
+            //Deselect the SelectedPanel from the RootGrid (alternatively).
+            //Panel selectedRootPanel = UserInterface.Active.Root.Find(_SelectedIdentifier, true) as Panel;
+            //if (selectedRootPanel != null)
+            //{
+            //    selectedRootPanel.FillColor = GamePadSetup.SelectedColor;
+            //}
 
             //NextMode: from RootPanel -> to Panel selection.
             SelectionMode = SelectionMode.Panel;
@@ -308,6 +324,16 @@ namespace GeonBit.UI.Source.Entities
         public virtual void SetDefaultPanelIndex(Anchor anchor)
         {
             _OldPanelIndex = DefaultPanelIndex;
+        }
+
+        /// <summary>
+        /// Deselects the SelectedPanel by setting the DefaultSkin and the corresponding FillColor.
+        /// </summary>
+        private void DeselectSelectedPanel()
+        {
+            SelectedPanel.Skin = GamePadSetup.DefaultSkin;
+            if (InvisiblePanel) SelectedPanel.FillColor = new Color();
+            else SelectedPanel.FillColor = GamePadSetup.DefaultColor;
         }
 
         /// <summary>

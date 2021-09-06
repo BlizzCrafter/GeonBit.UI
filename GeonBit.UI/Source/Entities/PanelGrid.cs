@@ -160,6 +160,8 @@ namespace GeonBit.UI.Source.Entities
             Anchor defaultPanelSelection = Anchor.TopLeft)
             : this(Vector2.Zero, Anchor.Center, null)
         {
+            Identifier = GetIdentifier(HierarchyIdentifier.RootGrid);
+
             PanelOverflowBehavior = PanelOverflowBehavior.Overflow;
 
             CreatePanelGrid(9, new Vector2(0.33f, 0));
@@ -173,8 +175,6 @@ namespace GeonBit.UI.Source.Entities
             SpaceBefore = Vector2.Zero;
 
             LockPanelGrid = false; //The RootPanel shouldn't be locked at the beginning, because it's the first entity.
-
-            Identifier = GetIdentifier(HierarchyIdentifier.RootGrid);
 
             SetDefaultPanelIndex(defaultPanelSelection);
             PanelModeIn(false);
@@ -200,6 +200,8 @@ namespace GeonBit.UI.Source.Entities
         {
             if (panelCount % 3 != 0) throw new Exceptions.InvalidValueException("PanelCount must be a multitude of 3! E.g. 3, 6, 9 etc.");
 
+            Identifier = GetIdentifier(HierarchyIdentifier.PanelGrid);
+
             if (panelCount > 6)
             {
                 PanelOverflowBehavior = PanelOverflowBehavior.VerticalScroll;
@@ -210,8 +212,6 @@ namespace GeonBit.UI.Source.Entities
             Padding = new Vector2(16, 12);
 
             CreatePanelGrid(panelCount, panelSize);
-
-            Identifier = GetIdentifier(HierarchyIdentifier.PanelGrid);
         }
                 
         private PanelGrid(
@@ -235,7 +235,7 @@ namespace GeonBit.UI.Source.Entities
                 {
                     Children[i].ClickThrough = true;
                     Children[i].Anchor = Anchor.AutoInline;
-                    Children[i].Identifier = $"{GetIdentifier(HierarchyIdentifier.Panel)} #{i}";
+                    Children[i].Identifier = $"{Identifier}{GetIdentifier(HierarchyIdentifier.Panel)}#{i}";
                 }
             }
 
