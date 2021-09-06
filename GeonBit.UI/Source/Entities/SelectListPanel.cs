@@ -8,28 +8,34 @@ namespace GeonBit.UI.Source.Entities
     /// </summary>
     public class SelectListPanel : PanelGamePad
     {
-        private SelectListGamePad _SelectListGamePad;
+        /// <summary>
+        /// The SelectListGamePad-Reference.
+        /// </summary>
+        public SelectListGamePad SelectListGamePad { get; private set; }
 
         /// <summary>
         /// Creates the GamePad-Panel with the default skin and based on a regular Panel-Entity.
         /// </summary>
         /// <param name="size">Panel size.</param>
+        /// <param name="headline">The headline for the SelectList.</param>
         /// <param name="anchor">Position anchor.</param>
         /// <param name="offset">Offset from anchor position.</param>
-        /// <param name="lockFirstIndex">Locks the first entry. Useful for headers.</param>
         /// <param name="items">The items you want to add to the SelectList.</param>
         public SelectListPanel(
-            Vector2 size, 
+            Vector2 size,
+            RichParagraph headline,
             Anchor anchor = Anchor.Center, 
             Vector2? offset = null, 
-            bool lockFirstIndex = true, 
             params string[] items)
             : base(size, anchor, offset)
         {
-            AddChild(_SelectListGamePad = new SelectListGamePad(lockFirstIndex, items) 
+            AddChild(SelectListGamePad = new SelectListGamePad(items) 
             { 
-                Identifier = GetIdentifier(HierarchyIdentifier.PanelContent) 
+                Identifier = GetIdentifier(HierarchyIdentifier.PanelContent),
+                Padding = new Vector2(Padding.X, Padding.Y + SpaceAfter.Y + headline.GetCharacterActualSize().Y)
             });
+
+            AddChild(headline);
         }
 
         /// <summary>
@@ -39,19 +45,11 @@ namespace GeonBit.UI.Source.Entities
         {
             if (direction == PanelDirection.Down)
             {
-                if (_SelectListGamePad.SelectedIndex < _SelectListGamePad.Count - 1)
-                {
-                    _SelectListGamePad.SelectedIndex++;
-                }
-                else _SelectListGamePad.SelectedIndex = 0;
+                SelectListGamePad.SelectNextItem();
             }
             else if (direction == PanelDirection.Up)
             {
-                if (_SelectListGamePad.SelectedIndex > 0)
-                {
-                    _SelectListGamePad.SelectedIndex--;
-                }
-                else _SelectListGamePad.SelectedIndex = _SelectListGamePad.Count - 1;
+                SelectListGamePad.SelectPreviousItem();
             }
         }
     }
