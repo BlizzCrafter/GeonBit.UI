@@ -498,9 +498,12 @@ namespace GeonBit.UI.Source.Entities
         /// </summary>
         protected void ClickPanelContent(bool raiseClickEvent = true)
         {
-            _PanelContentClicked = true;
-            ClickedPanelContent = _SelectableChildren[ChildrenIndex];
-            _SelectableChildren[ChildrenIndex].State = EntityState.MouseDown;
+            if (_SelectableChildren != null && _SelectableChildren.Count > 0)
+            {
+                _PanelContentClicked = true;
+                ClickedPanelContent = _SelectableChildren[ChildrenIndex];
+                _SelectableChildren[ChildrenIndex].State = EntityState.MouseDown;
+            }
         }
 
         /// <summary>
