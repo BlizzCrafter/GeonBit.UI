@@ -144,6 +144,8 @@ namespace GeonBit.UI.Source.Entities
         public SelectListGamePad(params string[] items)
             : base(Vector2.Zero, Anchor.Auto, Vector2.Zero, PanelSkin.ListBackground)
         {
+            Identifier = "__SelectListGamePad";
+
             for (int i = 0; i < items.Length; i++)
             {
                 AddItem(items[i]);
