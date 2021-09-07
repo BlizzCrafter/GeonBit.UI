@@ -82,18 +82,22 @@ namespace GeonBit.UI.Source.Entities
         /// Create the gamepad supported button.
         /// </summary>
         /// <param name="text">Text for the button label.</param>
+        /// <param name="hierarchyIdentifier"></param>
         /// <param name="skin">Button skin (texture to use).</param>
         /// <param name="anchor">Position anchor.</param>
         /// <param name="size">Button size (if not defined will use default size).</param>
         /// <param name="offset">Offset from anchor position.</param>
         public ButtonGamePad(
-            string text, 
+            string text,
+            HierarchyIdentifier hierarchyIdentifier = HierarchyIdentifier.PanelContent,
             ButtonSkin skin = ButtonSkin.Default, 
             Anchor anchor = Anchor.Auto, 
             Vector2? size = null,
             Vector2? offset = null)
             : base(text, skin, anchor, size, offset)
         {
+            Identifier = PanelGamePad.GetIdentifier(hierarchyIdentifier);
+
             //We are doing clicking and event handling customly.
             ClickThrough = true;
         }
