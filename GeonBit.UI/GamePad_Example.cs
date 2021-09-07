@@ -60,7 +60,7 @@ namespace GeonBit.UI
 
         private void InitGamePadExample()
         {
-            _RootGridPanel = new PanelGrid(RootGridLayout.SmallCorners, Anchor.TopRight) { Name = "Root Grid" };
+            _RootGridPanel = new PanelGrid(RootGridLayout.SmallCornersWideVerticals, Anchor.TopRight) { Name = "Root Grid" };
             UserInterface.Active.AddEntity(_RootGridPanel);
 
             PanelGrid panelGrid = new PanelGrid(new Vector2(0, 0), 24, new Vector2(0.33f, -1), Anchor.AutoInline) { Name = "Panel Grid" };
@@ -73,8 +73,8 @@ namespace GeonBit.UI
                         panelGrid.Children[i].AddChild(new Header($"Panel - #{i}"));
 
                         // add some buttons
-                        panelGrid.Children[i].AddChild(new ButtonGamePad("Hello World", ButtonSkin.Default) { ToolTipText = $"This is Test-Tooltip #{i}", OnClick = SayHelloWorldClicked, Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) });
-                        panelGrid.Children[i].AddChild(new ButtonGamePad("Toggle", ButtonSkin.Default) { ToggleMode = true, Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) });
+                        panelGrid.Children[i].AddChild(new ButtonGamePad("Hello World") { ToolTipText = $"This is Test-Tooltip #{i}", OnClick = SayHelloWorldClicked });
+                        panelGrid.Children[i].AddChild(new ButtonGamePad("Toggle") { ToggleMode = true });
                     }
                 }
             }
@@ -121,27 +121,63 @@ namespace GeonBit.UI
                     selectListPanel));
 
             _RootGridPanel.GetGridPanel(Anchor.TopCenter).AddChild(
-                new PanelBar(
-                    new ButtonGamePad("Button-1", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #1", Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) },
-                    new ButtonGamePad("Non-Selectable", anchor: Anchor.AutoInline) { Enabled = false },
-                    new ButtonGamePad("Button-3", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #3", Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) },
-                    new ButtonGamePad("Button-4", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #4", Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) },
-                    new ButtonGamePad("Toggle", ButtonSkin.Alternative, anchor: Anchor.AutoInline) { ToggleMode = true, Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent) }
+                new PanelBar(Orientation.Horizontal,
+                    new ButtonGamePad("Button-1", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #1" },
+                    new ButtonGamePad("Non-Selectable", HierarchyIdentifier.None, anchor: Anchor.AutoInline) { Enabled = false },
+                    new ButtonGamePad("Button-3", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #3" },
+                    new ButtonGamePad("Button-4", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #4" },
+                    new ButtonGamePad("Toggle", skin: ButtonSkin.Alternative, anchor: Anchor.AutoInline) { ToggleMode = true }
                     ));
 
             _RootGridPanel.GetGridPanel(Anchor.TopRight).AddChild(
-                new PanelBar(
+                new PanelBar(Orientation.Horizontal,
                         new Icon(IconType.Heart, Anchor.Center) { MinSize = new Vector2(0, 0) } 
                     ));
 
+            _RootGridPanel.GetGridPanel(Anchor.CenterRight).AddChild(
+                new DropDownPanel(new Vector2(0, 0),
+                entities: new Entity[]
+                {
+                    new DropDownGamePad("a_Filter-1", "a_Filter-2", "a_Filter-3", "a_Filter-4"),
+                    new DropDownGamePad("b_Filter-1", "b_Filter-2", "b_Filter-3", "b_Filter-4"),
+                    new DropDownGamePad("c_Filter-1", "c_Filter-2", "c_Filter-3", "c_Filter-4"),
+                    new DropDownGamePad("d_Filter-1", "d_Filter-2", "d_Filter-3", "d_Filter-4"),
+                    new ButtonGamePad("Button-1"),
+                    new ButtonGamePad("Button-2"),
+                    new ButtonGamePad("Button-3"),
+                    new ButtonGamePad("Non-Selectable", HierarchyIdentifier.None) { Enabled = false }
+                })
+                { Name = "Filter Panel" });
+
             _RootGridPanel.GetGridPanel(Anchor.BottomCenter).AddChild(
-                new PanelBar(
-                        new RichParagraph(@"{{BUTTON_A}}A{{DEFAULT}}: Accept {{BUTTON_B}}B{{DEFAULT}}: Back {{MONO}}DPad{{DEFAULT}}: Select {{MONO}}LB|RB{{DEFAULT}}: Switch", 
-                        Anchor.Center, scale: 2f) 
+                new PanelBar(Orientation.Horizontal,
+                        new RichParagraph(@"{{BUTTON_A}}A{{DEFAULT}}: Accept {{BUTTON_B}}B{{DEFAULT}}: Back {{MONO}}DPad{{DEFAULT}}: Select {{MONO}}LB|RB{{DEFAULT}}: Switch",
+                        Anchor.Center, scale: 2f)
                         { AlignToCenter = true, WrapWords = false, BreakWordsIfMust = false, AddHyphenWhenBreakWord = false })
                     );
 
+            //Hide all empty Panels and make them unselectable by gamepad.
             _RootGridPanel.HideEmptyPanels();
+
+            //The CenterRight GridPanel is not visible by default (panelGrid with index 0 is selected first).
+            _RootGridPanel.GetGridPanel(Anchor.CenterRight).Visible = false;
+
+            //The CenterRight GridPanel should only be visible when the SelectListPanel is visible.
+            selectListPanel.OnVisiblityChange = (e) =>
+            {
+                Panel filterPanel = _RootGridPanel.GetGridPanel(Anchor.CenterRight);
+                filterPanel.Visible = e.Visible;
+
+                if (!e.Visible && _RootGridPanel.SelectedPanel == filterPanel)
+                {
+                    _RootGridPanel.ResetPanelSelection();
+                }
+            };
+            panelGrid.OnVisiblityChange = (e) =>
+            {
+                _RootGridPanel.GetGridPanel(Anchor.CenterRight).Visible = e.Visible;
+            };
+
             base.Initialize();
         }
 
