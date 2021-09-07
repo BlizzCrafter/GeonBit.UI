@@ -11,6 +11,20 @@ using System.Threading.Tasks;
 namespace GeonBit.UI.Source.Entities
 {
     /// <summary>
+    /// The orientation of the PanelBar.
+    /// </summary>
+    public enum Orientation
+    {
+        /// <summary>
+        /// Horizontal is best suited for entities going from left to right. 
+        /// </summary>
+        Horizontal,
+        /// <summary>
+        /// Vertical is best suited for entities goning from top to bottom.
+        /// </summary>
+        Vertical
+    }
+    /// <summary>
     /// A PanelBar makes it easy to create a Panel with Entities in it.
     /// </summary>
     [System.Serializable]
@@ -27,16 +41,18 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// Creates a basic PanelBar with a custom amount of entities.
         /// </summary>
-        public PanelBar(params Entity[] entities)
+        public PanelBar(Orientation orientation, params Entity[] entities)
             : base(new Vector2(0, 0))
         {
             int entitiesCount = entities.Length;
 
-            Padding = new Vector2(8);
+            Padding = new Vector2(4);
 
             for (int i = 0; i < entitiesCount; i++)
             {
-                entities[i].Size = new Vector2(1f / entitiesCount, 0);
+                entities[i].Size = orientation == Orientation.Horizontal ? new Vector2(1f / entitiesCount, 0) : new Vector2(0, 1f / entitiesCount);
+                entities[i].SpaceAfter = Vector2.Zero;
+                entities[i].SpaceBefore = Vector2.Zero;
                 AddChild(entities[i]);
             }
 
