@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Linq;
 
 namespace GeonBit.UI.Source.Entities
 {
@@ -118,7 +119,7 @@ namespace GeonBit.UI.Source.Entities
             if (PanelIndex + 1 > _PanelsPanel.Children.Count - 1) PanelIndex = 0;
             else PanelIndex++;
 
-            SelectTabIndex(_PanelsPanel);
+            SelectTabIndex();
         }
 
         /// <summary>
@@ -129,15 +130,19 @@ namespace GeonBit.UI.Source.Entities
             if (PanelIndex - 1 < 0) PanelIndex = _PanelsPanel.Children.Count - 1;
             else PanelIndex--;
 
-            SelectTabIndex(_PanelsPanel);
+            SelectTabIndex();
         }
 
-        private void SelectTabIndex(Entity panelsPanel)
+        private void SelectTabIndex()
         {
-            var tabData = panelsPanel.Children[PanelIndex].AttachedData as TabData;
+            var tabData = _PanelsPanel.Children[PanelIndex].AttachedData as TabData;
             string nextPanelName = tabData.name;
 
             SelectTab(nextPanelName);
+
+            _PanelsPanel.Children.ToList()
+                .ForEach(_panel => _panel.Children.ToList()
+                .ForEach(PanelGamePad => PanelGamePad.OnVisiblityChange?.Invoke(_panel)));
         }
 
         /// <summary>
@@ -158,6 +163,8 @@ namespace GeonBit.UI.Source.Entities
         public PanelTabsGamePad(TabLocation tabLocation, params PanelGamePad[] panelGamePadTabs)
             : base(PanelSkin.Simple)
         {
+            Identifier = "__PanelTabsGamePad";
+
             _TabLocation = tabLocation;
             _PanelTabCount = panelGamePadTabs.Length;
 
