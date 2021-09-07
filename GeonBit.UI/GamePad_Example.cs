@@ -78,18 +78,17 @@ namespace GeonBit.UI
                     }
                 }
             }
-            
 
             SelectListPanel selectListPanel = new SelectListPanel(new Vector2(0, 0), anchor: Anchor.TopCenter,
                 headline: new RichParagraph(System.String.Format(
-                    "{0,-8} {1,-8} {2,-8} {3,-8} {4,-8} {5,-8} {6,-8}", "{{LIST_TITLE}}", 
+                    "{0,-8} {1,-8} {2,-8} {3,-8} {4,-8} {5,-8} {6,-8}", "{{LIST_TITLE}}",
                     "Name", "Class", "Level", "Test1", "Test2", "Test3"), Anchor.TopLeft, scale: 1.6f)
-                { 
-                    WrapWords = false, 
-                    BreakWordsIfMust = false, 
-                    AddHyphenWhenBreakWord = false 
+                {
+                    WrapWords = false,
+                    BreakWordsIfMust = false,
+                    AddHyphenWhenBreakWord = false
                 },
-                items: new string[] 
+                items: new string[]
                 {
                     System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Joe", "Mage", "5", "Test1", "Test2", "Test3"),
                     System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Ron", "Monk", "7", "Test1", "Test2", "Test3"),
@@ -98,21 +97,22 @@ namespace GeonBit.UI
                     System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Abe", "Cleric", "8", "Test1", "Test2", "Test3"),
                     System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "James", "Warlock", "20", "Test1", "Test2", "Test3"),
                     System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Bob", "Bard", "1", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Joe", "Mage", "5", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Ron", "Monk", "7", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Alex", "Rogue", "3", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Jim", "Paladin", "7", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Abe", "Cleric", "8", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "James", "Warlock", "20", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Bob", "Bard", "1", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Joe", "Mage", "5", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Ron", "Monk", "7", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Alex", "Rogue", "3", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Jim", "Paladin", "7", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Abe", "Cleric", "8", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "James", "Warlock", "20", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Bob", "Bard", "1", "Test1", "Test2", "Test3")
-                }) { Name = "Select List" };
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Frank", "Mage", "5", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Luis", "Monk", "7", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Babo", "Rogue", "3", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Karin", "Paladin", "7", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Lexter", "Cleric", "8", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Lumi", "Warlock", "20", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Jax", "Bard", "1", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Joli", "Mage", "5", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Keno", "Monk", "7", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Tom", "Rogue", "3", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Rex", "Paladin", "7", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Timbo", "Cleric", "8", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Alix", "Warlock", "20", "Test1", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Rambo", "Bard", "1", "Test1", "Test2", "Test3")
+                })
+            { Name = "Select List" };
             selectListPanel.SelectListGamePad.ItemsScale = 1.3f;
 
             _RootGridPanel.GetGridPanel(Anchor.Center).AddChild(
