@@ -63,6 +63,8 @@
     <Compile Include="Source\Entities\CheckBoxGamePad.cs" />
     <Compile Include="Source\Entities\ColoredRectangle.cs" />
     <Compile Include="Source\Entities\DropDown.cs" />
+    <Compile Include="Source\Entities\DropDownGamePad.cs" />
+    <Compile Include="Source\Entities\DropDownPanel.cs" />
     <Compile Include="Source\Entities\Entity.cs" />
     <Compile Include="Source\Entities\Header.cs" />
     <Compile Include="Source\Entities\HorizontalLine.cs" />
