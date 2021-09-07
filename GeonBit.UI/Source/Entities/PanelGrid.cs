@@ -24,7 +24,11 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// Same as SmallCorners but this one has also small vertical bars which makes the hole surroundings of the center panel very small.
         /// </summary>
-        SmallCornersVerticals
+        SmallCornersVerticals,
+        /// <summary>
+        /// Same as SmallCorners but this one has also wide vertical bars which makes the center panel a bit smaller.
+        /// </summary>
+        SmallCornersWideVerticals
     }
 
     /// <summary>
@@ -173,6 +177,7 @@ namespace GeonBit.UI.Source.Entities
             if (rootGridLayout == RootGridLayout.Default) CreateDefaultLayout();
             else if (rootGridLayout == RootGridLayout.SmallCorners) CreateSmallCornersLayout();
             else if (rootGridLayout == RootGridLayout.SmallCornersVerticals) CreateSmallCornersVerticalsLayout();
+            else if (rootGridLayout == RootGridLayout.SmallCornersWideVerticals) CreateSmallCornersWideVerticalsLayout();
 
             Padding = Vector2.Zero;
             SpaceAfter = Vector2.Zero;
@@ -421,6 +426,36 @@ namespace GeonBit.UI.Source.Entities
             Children[4].Anchor = Anchor.Center;
 
             Children[5].Size = new Vector2(0.05f, 0.8f);
+            Children[5].Anchor = Anchor.CenterRight;
+
+            Children[6].Size = new Vector2(0.05f, 0.1f);
+            Children[6].Anchor = Anchor.BottomLeft;
+
+            Children[7].Size = new Vector2(0.9f, 0.1f);
+            Children[7].Anchor = Anchor.BottomCenter;
+
+            Children[8].Size = new Vector2(0.05f, 0.1f);
+            Children[8].Anchor = Anchor.BottomRight;
+        }
+
+        private void CreateSmallCornersWideVerticalsLayout()
+        {
+            Children[0].Size = new Vector2(0.05f, 0.1f);
+            Children[0].Anchor = Anchor.TopLeft;
+
+            Children[1].Size = new Vector2(0.9f, 0.1f);
+            Children[1].Anchor = Anchor.TopCenter;
+
+            Children[2].Size = new Vector2(0.05f, 0.1f);
+            Children[2].Anchor = Anchor.TopRight;
+
+            Children[3].Size = new Vector2(0.15f, 0.8f);
+            Children[3].Anchor = Anchor.CenterLeft;
+
+            Children[4].Size = new Vector2(0.7f, 0.8f);
+            Children[4].Anchor = Anchor.Center;
+
+            Children[5].Size = new Vector2(0.15f, 0.8f);
             Children[5].Anchor = Anchor.CenterRight;
 
             Children[6].Size = new Vector2(0.05f, 0.1f);
