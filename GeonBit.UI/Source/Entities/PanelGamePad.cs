@@ -13,6 +13,10 @@ namespace GeonBit.UI.Source.Entities
     public enum HierarchyIdentifier
     {
         /// <summary>
+        /// Not available in GamePad-Detection.
+        /// </summary>
+        None,
+        /// <summary>
         /// The very first PanelGrid of our system.
         /// </summary>
         RootGrid,
@@ -74,6 +78,11 @@ namespace GeonBit.UI.Source.Entities
     public abstract class PanelGamePad : Panel
     {
         /// <summary>
+        /// The name of this Panel. Useful to name panel tabs as well.
+        /// </summary>
+        public string Name { get; set; } = "Default";
+
+        /// <summary>
         /// The last entity we have clicked.
         /// </summary>
         public static Entity ClickedPanelContent { get; set; }
@@ -84,9 +93,9 @@ namespace GeonBit.UI.Source.Entities
         public static Entity SelectedPanelContent { get; set; }
 
         /// <summary>
-        /// The name of this Panel. Useful to name panel tabs as well.
+        /// The currently selected Panel.
         /// </summary>
-        public string Name { get; set; } = "Default";
+        public Panel SelectedPanel { get; private set; }
 
         /// <summary>
         /// Our current PanelIndex (selection).
@@ -132,10 +141,6 @@ namespace GeonBit.UI.Source.Entities
         /// </summary>
         protected bool LockPanelGrid { get; set; } = false;
 
-        /// <summary>
-        /// The currently selected Panel.
-        /// </summary>
-        protected Panel SelectedPanel { get; set; }
         private string _SelectedIdentifier;
 
         private List<Entity> _SelectableChildren = new List<Entity>();
