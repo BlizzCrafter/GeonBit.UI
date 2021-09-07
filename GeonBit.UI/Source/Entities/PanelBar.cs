@@ -46,7 +46,7 @@ namespace GeonBit.UI.Source.Entities
         {
             int entitiesCount = entities.Length;
 
-            Padding = new Vector2(4);
+            Padding = new Vector2(6);
 
             for (int i = 0; i < entitiesCount; i++)
             {
