@@ -13,7 +13,7 @@ namespace GeonBit.UI.Source.Entities
     public enum HierarchyIdentifier
     {
         /// <summary>
-        /// Not available in GamePad-Detection.
+        /// Not available in GamePad-Selection.
         /// </summary>
         None,
         /// <summary>
@@ -448,22 +448,25 @@ namespace GeonBit.UI.Source.Entities
         {
             if (_SelectableChildren != null && _SelectableChildren.Count > 0)
             {
-                //We don't tint entities like SelectLists.
-                if (_SelectableChildren[ChildrenIndex] is SelectListGamePad == false)
-                {
-                    //Enable all the children from the currently selected panel.
-                    _SelectableChildren.ForEach(
-                        x =>
+                //Enable all the children from the currently selected panel.
+                _SelectableChildren.ForEach(
+                    x =>
+                    {
+                        //We don't tint entities like SelectLists.
+                        if (x is SelectListPanel == false &&
+                            x is SelectListGamePad == false && 
+                            x is DropDownPanel == false &&
+                            x is DropDownGamePad == false)
                         {
                             x.Enabled = true;
                             x.FillColor = GamePadSetup.DefaultColor;
                             x.State = EntityState.Default;
-                        });
 
-                    //Add selected color and state to the currently selected child.
-                    _SelectableChildren[ChildrenIndex].FillColor = GamePadSetup.SelectedColor;
-                    _SelectableChildren[ChildrenIndex].State = EntityState.MouseHover;
-                }
+                            //Add selected color and state to the currently selected child.
+                            _SelectableChildren[ChildrenIndex].FillColor = GamePadSetup.SelectedColor;
+                            _SelectableChildren[ChildrenIndex].State = EntityState.MouseHover;
+                        }
+                    });
 
                 //Deselect old SelectedPanelContent.
                 SelectedPanelContentTrigger(false, raiseEvents);
@@ -506,11 +509,12 @@ namespace GeonBit.UI.Source.Entities
         /// <param name="selectionState">The wanted selection state.</param>
         private void SetChildrenEnabled(SelectionState selectionState)
         {
-            Children.ToList().ForEach(
-                            entity =>
-                            {
-                                //We don't tint panels like SelectLists.
-                                if (entity is SelectListGamePad == false)
+            //We don't tint or enable/disable panels like DropDownPanel and SelectListPanel here.
+            //They are doing it's own coloring- and enable/disable- techniques.
+            if (this is DropDownPanel == false && this is SelectListPanel == false)
+            {
+                Children.ToList().ForEach(
+                                entity =>
                                 {
                                     if (entity.Identifier == GetIdentifier(HierarchyIdentifier.PanelContent))
                                     {
@@ -542,18 +546,18 @@ namespace GeonBit.UI.Source.Entities
                                                 selectable.Enabled = false;
                                                 selectable.State = EntityState.Default;
                                             }
-                                        });
-                                }
-                            }); 
+                                        });                                
+                                });
         }
+    }
 
-        /// <summary>
-        /// Creates the GamePad-Panel with the default skin and based on a regular Panel-Entity.
-        /// </summary>
-        /// <param name="size">Panel size.</param>
-        /// <param name="anchor">Position anchor.</param>
-        /// <param name="offset">Offset from anchor position.</param>
-        protected PanelGamePad(
+    /// <summary>
+    /// Creates the GamePad-Panel with the default skin and based on a regular Panel-Entity.
+    /// </summary>
+    /// <param name="size">Panel size.</param>
+    /// <param name="anchor">Position anchor.</param>
+    /// <param name="offset">Offset from anchor position.</param>
+    protected PanelGamePad(
                Vector2 size,
                Anchor anchor = Anchor.Center,
                Vector2? offset = null)
