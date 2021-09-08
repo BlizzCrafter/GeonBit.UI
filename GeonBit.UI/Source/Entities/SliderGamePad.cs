@@ -71,7 +71,7 @@ namespace GeonBit.UI.Source.Entities
         /// </summary>
         public void TriggerOnButtonReleased()
         {
-            DoOnMouseReleased();
+            //DoOnMouseReleased();
         }
         /// <summary>
         /// Calls the DoOnValueChange() event internally.
@@ -84,7 +84,7 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// Calls the OnMouseWheelScroll() event internally.
         /// </summary>
-        public void TriggerOnScroll(PanelDirection direction)
+        public void TriggerOnScroll(PanelDirection direction, bool thumbstickEvent)
         {
             int scrollDirection = 0;
 

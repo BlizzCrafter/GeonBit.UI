@@ -48,6 +48,6 @@
         /// <summary>
         /// Calls the OnMouseWheelScroll() event internally.
         /// </summary>
-        void TriggerOnScroll(PanelDirection direction);
+        void TriggerOnScroll(PanelDirection direction, bool thumbstickEvent);
     }
 }

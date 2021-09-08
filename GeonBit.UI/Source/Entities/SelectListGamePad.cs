@@ -84,8 +84,17 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// Calls the OnMouseWheelScroll() event internally.
         /// </summary>
-        public void TriggerOnScroll(PanelDirection direction)
+        public void TriggerOnScroll(PanelDirection direction, bool thumbstickEvent)
         {
+            if (thumbstickEvent)
+            {
+                int scrollDirection = 0;
+
+                if (direction == PanelDirection.Up) scrollDirection = -1;
+                else if (direction == PanelDirection.Down) scrollDirection = 1;
+
+                ScrollPosition = ScrollPosition + scrollDirection;
+            }
         }
 
         #endregion Events

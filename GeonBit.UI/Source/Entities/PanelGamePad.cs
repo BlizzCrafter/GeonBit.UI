@@ -662,29 +662,41 @@ namespace GeonBit.UI.Source.Entities
                             ((IEntityGamePad)SelectedPanelContent).TriggerOnButtonReleased();
                         }
 
-                        if (UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.DPadDown) ||
-                            UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.LeftThumbstickDown) ||
-                            UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.RightThumbstickDown))
+                        if (UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.DPadDown))
                         {
-                            ((IEntityGamePad)SelectedPanelContent).TriggerOnScroll(PanelDirection.Down);
+                            ((IEntityGamePad)SelectedPanelContent).TriggerOnScroll(PanelDirection.Down, false);
                         }
-                        else if (UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.DPadUp) ||
-                            UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.LeftThumbstickUp) ||
-                            UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.RightThumbstickUp))
+                        else if (UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.DPadUp))
                         {
-                            ((IEntityGamePad)SelectedPanelContent).TriggerOnScroll(PanelDirection.Up);
+                            ((IEntityGamePad)SelectedPanelContent).TriggerOnScroll(PanelDirection.Up, false);
                         }
-                        else if (UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.DPadLeft) ||
-                            UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.LeftThumbstickLeft) ||
-                            UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.RightThumbstickLeft))
+                        else if (UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.DPadLeft))
                         {
-                            ((IEntityGamePad)SelectedPanelContent).TriggerOnScroll(PanelDirection.Left);
+                            ((IEntityGamePad)SelectedPanelContent).TriggerOnScroll(PanelDirection.Left, false);
                         }
-                        else if (UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.DPadRight) ||
-                            UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.LeftThumbstickRight) ||
-                            UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.RightThumbstickRight))
+                        else if (UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.DPadRight))
                         {
-                            ((IEntityGamePad)SelectedPanelContent).TriggerOnScroll(PanelDirection.Right);
+                            ((IEntityGamePad)SelectedPanelContent).TriggerOnScroll(PanelDirection.Right, false);
+                        }
+                        else if (UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.LeftThumbstickDown) ||
+                                UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.RightThumbstickDown))
+                        {
+                            ((IEntityGamePad)SelectedPanelContent).TriggerOnScroll(PanelDirection.Down, true);
+                        }
+                        else if (UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.LeftThumbstickUp) ||
+                                UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.RightThumbstickUp))
+                        {
+                            ((IEntityGamePad)SelectedPanelContent).TriggerOnScroll(PanelDirection.Up, true);
+                        }
+                        else if (UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.LeftThumbstickLeft) ||
+                                UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.RightThumbstickLeft))
+                        {
+                            ((IEntityGamePad)SelectedPanelContent).TriggerOnScroll(PanelDirection.Left, true);
+                        }
+                        else if (UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.LeftThumbstickRight) ||
+                                UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.RightThumbstickRight))
+                        {
+                            ((IEntityGamePad)SelectedPanelContent).TriggerOnScroll(PanelDirection.Right, true);
                         }
                     }
                 }
