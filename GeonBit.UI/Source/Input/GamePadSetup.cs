@@ -52,54 +52,62 @@ namespace GeonBit.UI.Source.Input
         /// <summary>
         /// The default Color of an entity.
         /// </summary>
-        public static Color DefaultColor = Color.White;
+        public static Color DefaultColor { get; set; } = Color.White;
         /// <summary>
         /// The selected Color of an entity.
         /// </summary>
-        public static Color SelectedColor = Color.LightPink;
+        public static Color SelectedColor { get; set; } = Color.LightPink;
 
         /// <summary>
         /// LIST_TITLE color.
         /// </summary>
-        public static Color ListTitle = new Color(155, 74, 240);
+        public static Color ListTitle { get; set; } = new Color(155, 74, 240);
 
+        /// <summary>
+        /// The deadzone of the left thumbstick.
+        /// </summary>
+        public static Vector2 ThumbstickLeftDeadzone { get; set; } = new Vector2(0.25f);
+        /// <summary>
+        /// The deadzone of the right thumbstick.
+        /// </summary>
+        public static Vector2 ThumbstickRightDeadzone { get; set; } = new Vector2(0.25f);
         /// <summary>
         /// Xbox Button_A color.
         /// </summary>
-        public static Color ButtonA = new Color(60, 219, 78);
+        public static Color ButtonA { get; set; } = new Color(60, 219, 78);
         /// <summary>
         /// Xbox Button_X color.
         /// </summary>
-        public static Color ButtonX = new Color(64, 204, 208);
+        public static Color ButtonX { get; set; } = new Color(64, 204, 208);
         /// <summary>
         /// Xbox Button_Y color.
         /// </summary>
-        public static Color ButtonY = new Color(236, 219, 51);
+        public static Color ButtonY { get; set; } = new Color(236, 219, 51);
         /// <summary>
         /// Xbox Button_B color.
         /// </summary>
-        public static Color ButtonB = new Color(208, 66, 66);
+        public static Color ButtonB { get; set; } = new Color(208, 66, 66);
 
         /// <summary>
         /// The default Skin of an entity.
         /// </summary>
-        public static PanelSkin DefaultSkin = PanelSkin.Simple;
+        public static PanelSkin DefaultSkin { get; set; } = PanelSkin.Simple;
         /// <summary>
         /// The selected Skin of an entity.
         /// </summary>
-        public static PanelSkin SelectedSkin = PanelSkin.Fancy;
+        public static PanelSkin SelectedSkin { get; set; } = PanelSkin.Fancy;
 
         /// <summary>
         /// How long does it take before a MessageBox should be confirmable?
         /// Don't make it to short to avoid that the MessageBox would close immediately.
         /// </summary>
-        public static double MessageBoxTimeOut = 500;
+        public static double MessageBoxTimeOut { get; set; } = 500;
 
         /// <summary>
         /// How long does it take before a clicked panel content should call the OnClick(); event?
         /// Don't make it to short to avoid that the clicked panel content triggers right after a panel was selected.
         /// </summary>
-        public static double PanelContentClickedTimeOut = 100;
+        public static double PanelContentClickedTimeOut { get; set; } = 100;
 
         /// <summary>
         /// Initialize the GamePadSetup class.
