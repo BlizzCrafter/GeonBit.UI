@@ -642,7 +642,7 @@ namespace GeonBit.UI
         }
 
         /// <summary>
-        /// Return the state of a gamepad button (up / down).
+        /// Return the state of a gamepad button.
         /// </summary>
         /// <param name="button">Button to check.</param>
         /// <returns>GamePad button state.</returns>
@@ -685,7 +685,7 @@ namespace GeonBit.UI
         }
 
         /// <summary>
-        /// Return the state of a gamepad button (up / down), in previous frame.
+        /// Return the state of a gamepad button in previous frame.
         /// </summary>
         /// <param name="button">Button to check.</param>
         /// <returns>GamePad button state.</returns>
@@ -728,13 +728,57 @@ namespace GeonBit.UI
         }
 
         /// <summary>
+        /// Return the state of a gamepad thumbstick (left / right / up / down).
+        /// </summary>
+        /// <param name="button">Button to check.</param>
+        /// <returns>GamePad thumbstick state.</returns>
+        private bool GetGamePadThumbstickState(Buttons button)
+        {
+            if (button == Buttons.LeftThumbstickLeft)
+            {
+                return _newGamePadState.ThumbSticks.Left.X < -GamePadSetup.ThumbstickLeftDeadzone.X;
+            }
+            else if (button == Buttons.LeftThumbstickRight)
+            {
+                return _newGamePadState.ThumbSticks.Left.X > GamePadSetup.ThumbstickLeftDeadzone.X;
+            }
+            else if (button == Buttons.LeftThumbstickUp)
+            {
+                return _newGamePadState.ThumbSticks.Left.Y > GamePadSetup.ThumbstickLeftDeadzone.Y;
+            }
+            else if (button == Buttons.LeftThumbstickDown)
+            {
+                return _newGamePadState.ThumbSticks.Left.Y < -GamePadSetup.ThumbstickLeftDeadzone.Y;
+            }
+
+            if (button == Buttons.RightThumbstickLeft)
+            {
+                return _newGamePadState.ThumbSticks.Right.X < -GamePadSetup.ThumbstickRightDeadzone.X;
+            }
+            else if (button == Buttons.RightThumbstickRight)
+            {
+                return _newGamePadState.ThumbSticks.Right.X > GamePadSetup.ThumbstickRightDeadzone.X;
+            }
+            else if (button == Buttons.RightThumbstickUp)
+            {
+                return _newGamePadState.ThumbSticks.Right.Y > GamePadSetup.ThumbstickRightDeadzone.Y;
+            }
+            else if (button == Buttons.RightThumbstickDown)
+            {
+                return _newGamePadState.ThumbSticks.Right.Y < -GamePadSetup.ThumbstickRightDeadzone.Y;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Check if a given gamepad button is down.
         /// </summary>
         /// <param name="button">GamePad button to check.</param>
         /// <return>True if given gamepad button is down.</return>
         public bool GamePadButtonDown(Buttons button = Buttons.A)
         {
-            return GetGamePadButtonState(button) == ButtonState.Pressed;
+            return GetGamePadThumbstickState(button) || GetGamePadButtonState(button) == ButtonState.Pressed;
         }
 
         /// <summary>
