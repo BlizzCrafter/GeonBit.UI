@@ -90,6 +90,7 @@
     <Compile Include="Source\Entities\SelectListGamePad.cs" />
     <Compile Include="Source\Entities\SelectListPanel.cs" />
     <Compile Include="Source\Entities\Slider.cs" />
+    <Compile Include="Source\Entities\SliderGamePad.cs" />
     <Compile Include="Source\Entities\StyleSheet.cs" />
     <Compile Include="Source\Entities\TextInput.cs" />
     <Compile Include="Source\Entities\TextInputValidators.cs" />

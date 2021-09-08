@@ -143,8 +143,8 @@ namespace GeonBit.UI
                     new DropDownGamePad("c_Filter-1", "c_Filter-2", "c_Filter-3", "c_Filter-4"),
                     new DropDownGamePad("d_Filter-1", "d_Filter-2", "d_Filter-3", "d_Filter-4"),
                     new ButtonGamePad("Button-1"),
+                    new SliderGamePad(0, 100, Vector2.Zero),
                     new ButtonGamePad("Button-2"),
-                    new ButtonGamePad("Button-3"),
                     new ButtonGamePad("Non-Selectable", HierarchyIdentifier.None) { Enabled = false }
                 })
                 { Name = "Filter Panel" });
