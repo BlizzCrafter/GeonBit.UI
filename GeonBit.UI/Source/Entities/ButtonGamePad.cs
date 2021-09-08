@@ -76,6 +76,14 @@ namespace GeonBit.UI.Source.Entities
             DoOnValueChange();
         }
 
+        /// <summary>
+        /// Calls the OnMouseWheelScroll() event internally.
+        /// </summary>
+        public void TriggerOnScroll(PanelDirection direction)
+        {
+            DoOnMouseWheelScroll();
+        }
+
         #endregion Events
 
         /// <summary>

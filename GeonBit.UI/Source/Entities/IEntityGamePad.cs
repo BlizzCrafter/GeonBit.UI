@@ -44,5 +44,10 @@
         /// Calls the DoOnValueChange() event internally.
         /// </summary>
         void TriggerOnValueChanged();
+
+        /// <summary>
+        /// Calls the OnMouseWheelScroll() event internally.
+        /// </summary>
+        void TriggerOnScroll(PanelDirection direction);
     }
 }
