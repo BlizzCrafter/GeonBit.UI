@@ -661,6 +661,31 @@ namespace GeonBit.UI.Source.Entities
                         {
                             ((IEntityGamePad)SelectedPanelContent).TriggerOnButtonReleased();
                         }
+
+                        if (UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.DPadDown) ||
+                            UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.LeftThumbstickDown) ||
+                            UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.RightThumbstickDown))
+                        {
+                            ((IEntityGamePad)SelectedPanelContent).TriggerOnScroll(PanelDirection.Down);
+                        }
+                        else if (UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.DPadUp) ||
+                            UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.LeftThumbstickUp) ||
+                            UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.RightThumbstickUp))
+                        {
+                            ((IEntityGamePad)SelectedPanelContent).TriggerOnScroll(PanelDirection.Up);
+                        }
+                        else if (UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.DPadLeft) ||
+                            UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.LeftThumbstickLeft) ||
+                            UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.RightThumbstickLeft))
+                        {
+                            ((IEntityGamePad)SelectedPanelContent).TriggerOnScroll(PanelDirection.Left);
+                        }
+                        else if (UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.DPadRight) ||
+                            UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.LeftThumbstickRight) ||
+                            UserInterface.Active.GamePadInputProvider.GamePadButtonDown(Buttons.RightThumbstickRight))
+                        {
+                            ((IEntityGamePad)SelectedPanelContent).TriggerOnScroll(PanelDirection.Right);
+                        }
                     }
                 }
 
