@@ -210,11 +210,17 @@ namespace GeonBit.UI.Source.Entities
             {
                 if (UserInterface.Active.GamePadInputProvider.GamePadButtonPressed(Buttons.LeftShoulder))
                 {
-                    PreviousTab();
+                    if (!PanelGamePad.RootGrid.PanelGridLocked)
+                    {
+                        PreviousTab();
+                    }
                 }
                 else if (UserInterface.Active.GamePadInputProvider.GamePadButtonPressed(Buttons.RightShoulder))
                 {
-                    NextTab();
+                    if (!PanelGamePad.RootGrid.PanelGridLocked)
+                    {
+                        NextTab();
+                    }
                 }
             }
 
