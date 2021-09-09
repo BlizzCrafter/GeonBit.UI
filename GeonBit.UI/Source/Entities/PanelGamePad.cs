@@ -83,6 +83,11 @@ namespace GeonBit.UI.Source.Entities
         public string Name { get; set; } = "Default";
 
         /// <summary>
+        /// Get the RootGrid-Reference.
+        /// </summary>
+        public static PanelGamePad RootGrid { get; protected set; }
+
+        /// <summary>
         /// The last entity we have clicked.
         /// </summary>
         public static Entity ClickedPanelContent { get; set; }
@@ -118,34 +123,12 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// The SelectionMode defines in which hierarchy we are currently standing with our gamepad.
         /// </summary>
-        protected SelectionMode SelectionMode { get; set; } = SelectionMode.PanelRoot;
+        public SelectionMode SelectionMode { get; private set; } = SelectionMode.PanelRoot;
 
         /// <summary>
-        /// Highlighting a Panel happens in the RootGrid.
-        /// An entity like the PanelBar gets completly streched above such a Panel per default, which makes the highlight invisible.
-        /// Setting InvisiblePanel to true ensure visibility in this case, because then the corresponding Panel will be invisible instead.
+        /// Selectively locks this PanelGrid (and not all of its childrens too like with the default "Locked" property of an entity).
         /// </summary>
-        protected bool InvisiblePanel 
-        {
-            get { return _InvisiblePanel; }
-            set
-            {
-                _InvisiblePanel = value;
-                if (value) FillColor = new Color();
-            }
-        }
-        private bool _InvisiblePanel;
-
-        /// <summary>
-        /// Selectively locks this PanelGrid (and not all of its childrens too like with the default "Locked" property of an entity.
-        /// </summary>
-        protected bool LockPanelGrid { get; set; } = false;
-
-        private string _SelectedIdentifier;
-
-        private List<Entity> _SelectableChildren = new List<Entity>();
-        private bool _PanelContentClicked;
-        private double _PanelContentClickedTimeOut;
+        public bool PanelGridLocked { get; private set; }
 
         /// <summary>
         /// Get a GamePad-Panel implementation related identifier.
@@ -167,12 +150,42 @@ namespace GeonBit.UI.Source.Entities
             return identifier.TrimStart('_');
         }
 
+        /// <summary>
+        /// Highlighting a Panel happens in the RootGrid.
+        /// An entity like the PanelBar gets completly streched above such a Panel per default, which makes the highlight invisible.
+        /// Setting InvisiblePanel to true ensure visibility in this case, because then the corresponding Panel will be invisible instead.
+        /// </summary>
+        protected bool InvisiblePanel 
+        {
+            get { return _InvisiblePanel; }
+            set
+            {
+                _InvisiblePanel = value;
+                if (value) FillColor = new Color();
+            }
+        }
+        private bool _InvisiblePanel;
+
+        private bool _PanelContentClicked;
+        private double _PanelContentClickedTimeOut;
+        private string _SelectedIdentifier;
+        private List<Entity> _SelectableChildren = new List<Entity>();
+
         #region Selection-Modes
+
+        /// <summary>
+        /// Make the first PanelSelection by entering the PanelMode.
+        /// </summary>
+        internal void StartPanelSelection()
+        {
+            PanelModeIn(false);
+            RootGrid.PanelGridLocked = false;
+        }
 
         /// <summary>
         /// Selects the PanelRoot.
         /// </summary>
-        protected void RootMode(bool comingFromRootGrid, bool raiseEvents = true)
+        private void RootMode(bool comingFromRootGrid, bool raiseEvents = true)
         {
             if (raiseEvents) OnClick?.Invoke(this);
 
@@ -190,16 +203,16 @@ namespace GeonBit.UI.Source.Entities
 
                 //Select the selected root panel by using the _SelectedIdentifier - previously set by coming from the PanelGrid.
                 Panel selectedRootPanel = UserInterface.Active.Root.Find(_SelectedIdentifier, true) as Panel;
-                selectedRootPanel.Skin = GamePadSetup.SelectedSkin;
+                if (selectedRootPanel != null)
+                {
+                    selectedRootPanel.Skin = GamePadSetup.SelectedSkin;
+                }
 
                 //Lock the PanelRoot (preperation for RootGrid(outer)-Selection).
-                LockPanelGrid = true;
-
-                //Get the RootGrid.
-                PanelGrid rootGrid = UserInterface.Active.Root.Find(GetIdentifier(HierarchyIdentifier.RootGrid), true) as PanelGrid;
+                PanelGridLocked = true;
 
                 //Unlock the RootGrid (now we are leaving this Panel and coming to the outer selection [RootGrid]).
-                rootGrid.LockPanelGrid = false;
+                RootGrid.PanelGridLocked = false;
             }
             //We are coming from the RootGrid which means we are trying to go deeper (from outer -> to inner).
             else
@@ -208,7 +221,7 @@ namespace GeonBit.UI.Source.Entities
                 if (SelectedPanel.Children != null && SelectedPanel.Children.Count > 0)
                 {
                     //Yes, so we are locking the RootGrid.
-                    LockPanelGrid = true;
+                    PanelGridLocked = true;
 
                     //Deselect the SelectedPanel if available (DefaultSkin, DefaultColor, NoColor).
                     DeselectSelectedPanel();
@@ -231,7 +244,7 @@ namespace GeonBit.UI.Source.Entities
                     selectedPanelGamePad._SelectedIdentifier = SelectedPanel.Identifier;
 
                     //Unlock the PanelGrid (now we are leaving the RootGrid and coming to the inner selection [PanelGrid].
-                    selectedPanelGamePad.LockPanelGrid = false;
+                    selectedPanelGamePad.PanelGridLocked = false;
                 }
             }
 
@@ -246,7 +259,7 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// Selects the first Panel from the PanelRoot.
         /// </summary>
-        protected void PanelModeIn(bool raiseEvents = true)
+        private void PanelModeIn(bool raiseEvents = true)
         {
             if (raiseEvents) OnClick?.Invoke(this);
 
@@ -273,7 +286,7 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// Deselects the current panel content and enable all children of the PanelGrid again.
         /// </summary>
-        protected void PanelModeOut(bool raiseEvents = true)
+        private void PanelModeOut(bool raiseEvents = true)
         {
             if (raiseEvents) OnClick?.Invoke(this);
 
@@ -298,7 +311,7 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// Selects the first panel content in the currently selected panel of this PanelGrid.
         /// </summary>
-        protected void PanelContentMode(bool raiseEvents = true)
+        private void PanelContentMode(bool raiseEvents = true)
         {
             if (raiseEvents) SelectedPanel.OnClick?.Invoke(SelectedPanel);
 
@@ -336,6 +349,15 @@ namespace GeonBit.UI.Source.Entities
         }
 
         /// <summary>
+        /// Reverts the PanelSelection to the old one. For example when PanelSelection is blocked (e.g. invisible panels).
+        /// Use this in your custom PanelGamePad class to correct values like the _CurrentRow in a PanelGrid.
+        /// </summary>
+        public virtual void RevertOldPanelSelection()
+        {
+            PanelIndex = _OldPanelIndex;
+        }
+
+        /// <summary>
         /// This will be the used index when resetting the Panel-Selection.
         /// </summary>
         public virtual void SetDefaultPanelIndex(Anchor anchor)
@@ -364,7 +386,7 @@ namespace GeonBit.UI.Source.Entities
             var panelChildren = Children.OfType<Panel>().ToList();
 
             if (PanelIndex < 0 || PanelIndex > panelChildren.Count - 1) PanelIndex = 0;
-            if (panelChildren.Count > 0 && !panelChildren[PanelIndex].Visible) PanelIndex = _OldPanelIndex;
+            if (panelChildren.Count > 0 && !panelChildren[PanelIndex].Visible) RevertOldPanelSelection();
 
             UpdatePanelSelection(direction);
         }
@@ -554,17 +576,14 @@ namespace GeonBit.UI.Source.Entities
         }
     }
 
-    /// <summary>
-    /// Creates the GamePad-Panel with the default skin and based on a regular Panel-Entity.
-    /// </summary>
-    /// <param name="size">Panel size.</param>
-    /// <param name="anchor">Position anchor.</param>
-    /// <param name="offset">Offset from anchor position.</param>
-    protected PanelGamePad(
-               Vector2 size,
-               Anchor anchor = Anchor.Center,
-               Vector2? offset = null)
-               : base(size, GamePadSetup.DefaultSkin, anchor, offset)
+        /// <summary>
+        /// Creates the GamePad-Panel with the default skin and based on a regular Panel-Entity.
+        /// </summary>
+        /// <param name="size">Panel size.</param>
+        /// <param name="anchor">Position anchor.</param>
+        /// <param name="offset">Offset from anchor position.</param>
+        protected PanelGamePad(Vector2 size, Anchor anchor = Anchor.Center, Vector2? offset = null) 
+            : base(size, GamePadSetup.DefaultSkin, anchor, offset)
         {
             //A PanelGamePad is a PanelGrid by default.
             Identifier = GetIdentifier(HierarchyIdentifier.PanelGrid);
@@ -575,7 +594,7 @@ namespace GeonBit.UI.Source.Entities
 
             //PanelGrids are locked by default.
             //They get selectivly unlocked when the user navigates through the grid to avoid double inputs.
-            LockPanelGrid = true;
+            PanelGridLocked = true;
             
             //We are doing clicking and event handling customly.
             ClickThrough = true;
@@ -590,7 +609,7 @@ namespace GeonBit.UI.Source.Entities
         /// <param name="scrollVal">Combined scrolling value (panels with scrollbar etc) of all parents.</param>
         public override void Update(ref Entity targetEntity, ref Entity dragTargetEntity, ref bool wasEventHandled, Point scrollVal)
         {
-            if (Enabled && !LockPanelGrid)
+            if (Enabled && !PanelGridLocked)
             {
                 if (Identifier != GetIdentifier(HierarchyIdentifier.RootGrid))
                 {
