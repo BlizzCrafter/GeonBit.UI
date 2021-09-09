@@ -155,10 +155,10 @@ namespace GeonBit.UI.Source.Entities
             : this(Vector2.Zero, Anchor.Center, null)
         {
             //This is the RootGrid.
-            Identifier = GetIdentifier(HierarchyIdentifier.RootGrid);
+            RootGrid = this;
 
-            //It shouldn't be locked at the beginning, because it's the first entity.
-            LockPanelGrid = false;
+            //Identifiy it.
+            Identifier = GetIdentifier(HierarchyIdentifier.RootGrid);
 
             PanelOverflowBehavior = PanelOverflowBehavior.Overflow;
 
@@ -174,7 +174,7 @@ namespace GeonBit.UI.Source.Entities
             SpaceBefore = Vector2.Zero;
 
             SetDefaultPanelIndex(defaultPanelSelection);
-            PanelModeIn();
+            StartPanelSelection();
         }
 
         /// <summary>
