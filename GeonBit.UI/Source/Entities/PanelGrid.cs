@@ -137,22 +137,12 @@ namespace GeonBit.UI.Source.Entities
             else throw new Exceptions.InvalidValueException("The anchor parameter has an invalid value. Supported values are: TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight.");
         }
 
-        private int _RowCount = 0, _CurrentRow = 1;
-
+        private int _CurrentRow => (PanelIndex / _Row) + 1;
         private int _StartOfTheRow => (_CurrentRow * _Row) - _Row;
         private int _EndOfTheRow => (_CurrentRow * _Row) - 1;
         private int _EndOfTheGridRow => (_RowCount * _Row) - _Row;
+        private int _RowCount = 0;
         private const int _Row = 3;
-
-        /// <summary>
-        /// Resets the current panel selection to the first index.
-        /// </summary>
-        public override void ResetPanelSelection()
-        {
-            _CurrentRow = 1;
-
-            base.ResetPanelSelection();
-        }
 
         /// <summary>
         /// Create a 3x3 FullScreen GridPanel which acts as a centered root GridPanel for all other GridPanels you create.
@@ -184,7 +174,7 @@ namespace GeonBit.UI.Source.Entities
             SpaceBefore = Vector2.Zero;
 
             SetDefaultPanelIndex(defaultPanelSelection);
-            PanelModeIn(false);
+            PanelModeIn();
         }
 
         /// <summary>
@@ -255,46 +245,28 @@ namespace GeonBit.UI.Source.Entities
         {
             if (direction == PanelDirection.Right)
             {
-                PanelIndex++;
-
-                if (PanelIndex > _EndOfTheRow) PanelIndex = _StartOfTheRow;
+                if (PanelIndex + 1 > _EndOfTheRow) PanelIndex = _StartOfTheRow;
+                else PanelIndex++;
             }
             else if (direction == PanelDirection.Left)
             {
-                PanelIndex--;
-
-                if (PanelIndex < _StartOfTheRow) PanelIndex = _EndOfTheRow;
+                if (PanelIndex - 1 < _StartOfTheRow) PanelIndex = _EndOfTheRow;
+                else PanelIndex--;
             }
             else if (direction == PanelDirection.Down)
             {
                 if (_RowCount > 1)
                 {
-                    if (_CurrentRow < _RowCount)
-                    {
-                        PanelIndex += _Row;
-                        _CurrentRow++;
-                    }
-                    else
-                    {
-                        PanelIndex -= _StartOfTheRow;
-                        _CurrentRow = 1;
-                    }
+                    if (_CurrentRow < _RowCount) PanelIndex += _Row;
+                    else PanelIndex -= _StartOfTheRow;
                 }
             }
             else if (direction == PanelDirection.Up)
             {
                 if (_RowCount > 1)
                 {
-                    if (_CurrentRow > 1)
-                    {
-                        PanelIndex -= _Row;
-                        _CurrentRow--;
-                    }
-                    else
-                    {
-                        PanelIndex += _EndOfTheGridRow;
-                        _CurrentRow = _RowCount;
-                    }
+                    if (_CurrentRow > 1) PanelIndex -= _Row;
+                    else PanelIndex += _EndOfTheGridRow;
                 }
             }
 
