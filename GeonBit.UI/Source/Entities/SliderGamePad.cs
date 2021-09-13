@@ -86,12 +86,15 @@ namespace GeonBit.UI.Source.Entities
         /// </summary>
         public void TriggerOnScroll(PanelDirection direction, bool thumbstickEvent)
         {
-            int scrollDirection = 0;
+            if (thumbstickEvent)
+            {
+                int scrollDirection = 0;
 
-            if (direction == PanelDirection.Left) scrollDirection = -1;
-            else if (direction == PanelDirection.Right) scrollDirection = 1;
+                if (direction == PanelDirection.Left) scrollDirection = -1;
+                else if (direction == PanelDirection.Right) scrollDirection = 1;
 
-            Value = _value + scrollDirection * GetStepSize();
+                Value = _value + scrollDirection * GetStepSize();
+            }
         }
 
         /// <summary>
@@ -115,7 +118,7 @@ namespace GeonBit.UI.Source.Entities
         public SliderGamePad(uint min, uint max, Vector2 size, SliderSkin skin = SliderSkin.Default, Anchor anchor = Anchor.Auto, Vector2? offset = null) 
             : base(min, max, size, skin, anchor, offset)
         {
-
+            Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent);
         }
     }
 }
