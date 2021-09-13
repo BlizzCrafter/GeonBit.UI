@@ -135,6 +135,8 @@ namespace GeonBit.UI.Source.Entities
             else PanelIndex++;
 
             SelectTabIndex();
+
+            if (PanelGamePad.RootGrid.SelectionDimension == SelectionDimension.Flat) PanelGamePad.RootGrid.StartPanelSelection();
         }
 
         /// <summary>
@@ -146,6 +148,8 @@ namespace GeonBit.UI.Source.Entities
             else PanelIndex--;
 
             SelectTabIndex();
+
+            if (PanelGamePad.RootGrid.SelectionDimension == SelectionDimension.Flat) PanelGamePad.RootGrid.StartPanelSelection();
         }
 
         private void SelectTabIndex()
@@ -195,7 +199,7 @@ namespace GeonBit.UI.Source.Entities
 
             _ButtonsPanel.FillColor = new Color();
             _PanelsPanel.FillColor = new Color();
-            _PanelsPanel.Padding = new Vector2(8, 0);
+            _PanelsPanel.Padding = new Vector2();
 
             if (_TabLocation == TabLocation.Bottom) _PanelsPanel.SendToBack();
             else if (_TabLocation == TabLocation.Invisible) _ButtonsPanel.Visible = false;
@@ -217,14 +221,14 @@ namespace GeonBit.UI.Source.Entities
             {
                 if (UserInterface.Active.GamePadInputProvider.GamePadButtonPressed(Buttons.LeftShoulder))
                 {
-                    if (!PanelGamePad.RootGrid.PanelGridLocked)
+                    if (PanelGamePad.RootGrid.IsOuterSelection)
                     {
                         PreviousTab();
                     }
                 }
                 else if (UserInterface.Active.GamePadInputProvider.GamePadButtonPressed(Buttons.RightShoulder))
                 {
-                    if (!PanelGamePad.RootGrid.PanelGridLocked)
+                    if (PanelGamePad.RootGrid.IsOuterSelection)
                     {
                         NextTab();
                     }

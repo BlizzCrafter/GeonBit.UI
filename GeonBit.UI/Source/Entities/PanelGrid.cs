@@ -28,7 +28,15 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// Same as SmallCorners but this one has also wide vertical bars which makes the center panel a bit smaller.
         /// </summary>
-        SmallCornersWideVerticals
+        SmallCornersWideVerticals,
+        /// <summary>
+        /// Same as SmallCornersWideVerticals but this one has even wider vertical bars which makes the center panel even smaller.
+        /// </summary>
+        SmallCornersUltraWideVerticals,
+        /// <summary>
+        /// Same as SmallCornersUltraWideVerticals but this one has even wider horizontal bars which makes the center panel even smaller.
+        /// </summary>
+        SmallCornersUltraWideVerticalsHorizontals
     }
 
     /// <summary>
@@ -85,6 +93,8 @@ namespace GeonBit.UI.Source.Entities
             else if (_NewRootGridLayout == RootGridLayout.SmallCorners) CreateSmallCornersLayout();
             else if (_NewRootGridLayout == RootGridLayout.SmallCornersVerticals) CreateSmallCornersVerticalsLayout();
             else if (_NewRootGridLayout == RootGridLayout.SmallCornersWideVerticals) CreateSmallCornersWideVerticalsLayout();
+            else if (_NewRootGridLayout == RootGridLayout.SmallCornersUltraWideVerticals) CreateSmallCornersUltraWideVerticalsLayout();
+            else if (_NewRootGridLayout == RootGridLayout.SmallCornersUltraWideVerticalsHorizontals) CreateSmallCornersUltraWideVerticalsHorizontalsLayout();
 
             Children.ToList().ForEach(
                     rootGridPanel => rootGridPanel.Children.ToList().ForEach(
@@ -106,9 +116,20 @@ namespace GeonBit.UI.Source.Entities
         private RootGridLayout _NewRootGridLayout;
 
         /// <summary>
-        /// This hides all empty panels in the Panel-Grid.
+        /// Calling this makes the PanelSelection available.
+        /// It should be only called on the RootGrid and after all UserInterface elements are fully generated.
         /// </summary>
-        public void HideEmptyPanels()
+        public override void StartPanelSelection()
+        {
+            base.StartPanelSelection();
+
+            HideEmptyPanels();
+        }
+
+        /// <summary>
+        /// This hides all empty panels in the RootGrid.
+        /// </summary>
+        private void HideEmptyPanels()
         {
             foreach (Panel panel in Children.OfType<Panel>().ToList())
             {
@@ -178,9 +199,11 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// Create a 3x3 FullScreen GridPanel which acts as a centered root GridPanel for all other GridPanels you create.
         /// </summary>
+        /// <param name="selectionDimension">Flat (2D) or Deep (3D) selection.</param>
         /// <param name="rootGridLayout">The layout of the GridPanel.</param>
         /// <param name="defaultPanelSelection">The Panel under this Anchor will be the target for resetting the Panel-Selection.</param>
         public PanelGrid(
+            SelectionDimension selectionDimension,
             RootGridLayout rootGridLayout,
             Anchor defaultPanelSelection = Anchor.TopLeft)
             : this(Vector2.Zero, Anchor.Center, null)
@@ -192,6 +215,7 @@ namespace GeonBit.UI.Source.Entities
             Identifier = GetIdentifier(HierarchyIdentifier.RootGrid);
 
             PanelOverflowBehavior = PanelOverflowBehavior.Overflow;
+            SelectionDimension = selectionDimension;
 
             CreatePanelGrid(9, new Vector2(0.33f, 0));
             {
@@ -202,7 +226,6 @@ namespace GeonBit.UI.Source.Entities
             }
             SetGridLayout(RootGridLayout = rootGridLayout);
             SetDefaultPanelIndex(defaultPanelSelection);
-            StartPanelSelection();
         }
 
         /// <summary>
@@ -462,6 +485,66 @@ namespace GeonBit.UI.Source.Entities
             Children[6].Anchor = Anchor.BottomLeft;
 
             Children[7].Size = new Vector2(0.9f, 0.1f);
+            Children[7].Anchor = Anchor.BottomCenter;
+
+            Children[8].Size = new Vector2(0.05f, 0.1f);
+            Children[8].Anchor = Anchor.BottomRight;
+        }
+
+        private void CreateSmallCornersUltraWideVerticalsLayout()
+        {
+            Children[0].Size = new Vector2(0.05f, 0.1f);
+            Children[0].Anchor = Anchor.TopLeft;
+
+            Children[1].Size = new Vector2(0.9f, 0.1f);
+            Children[1].Anchor = Anchor.TopCenter;
+
+            Children[2].Size = new Vector2(0.05f, 0.1f);
+            Children[2].Anchor = Anchor.TopRight;
+
+            Children[3].Size = new Vector2(0.25f, 0.8f);
+            Children[3].Anchor = Anchor.CenterLeft;
+
+            Children[4].Size = new Vector2(0.5f, 0.8f);
+            Children[4].Anchor = Anchor.Center;
+
+            Children[5].Size = new Vector2(0.25f, 0.8f);
+            Children[5].Anchor = Anchor.CenterRight;
+
+            Children[6].Size = new Vector2(0.05f, 0.1f);
+            Children[6].Anchor = Anchor.BottomLeft;
+
+            Children[7].Size = new Vector2(0.9f, 0.1f);
+            Children[7].Anchor = Anchor.BottomCenter;
+
+            Children[8].Size = new Vector2(0.05f, 0.1f);
+            Children[8].Anchor = Anchor.BottomRight;
+        }
+
+        private void CreateSmallCornersUltraWideVerticalsHorizontalsLayout()
+        {
+            Children[0].Size = new Vector2(0.05f, 0.1f);
+            Children[0].Anchor = Anchor.TopLeft;
+
+            Children[1].Size = new Vector2(0.9f, 0.25f);
+            Children[1].Anchor = Anchor.TopCenter;
+
+            Children[2].Size = new Vector2(0.05f, 0.1f);
+            Children[2].Anchor = Anchor.TopRight;
+
+            Children[3].Size = new Vector2(0.25f, 0.8f);
+            Children[3].Anchor = Anchor.CenterLeft;
+
+            Children[4].Size = new Vector2(0.5f, 0.5f);
+            Children[4].Anchor = Anchor.Center;
+
+            Children[5].Size = new Vector2(0.25f, 0.8f);
+            Children[5].Anchor = Anchor.CenterRight;
+
+            Children[6].Size = new Vector2(0.05f, 0.1f);
+            Children[6].Anchor = Anchor.BottomLeft;
+
+            Children[7].Size = new Vector2(0.9f, 0.25f);
             Children[7].Anchor = Anchor.BottomCenter;
 
             Children[8].Size = new Vector2(0.05f, 0.1f);
