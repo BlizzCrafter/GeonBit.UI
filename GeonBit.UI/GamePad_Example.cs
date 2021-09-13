@@ -5,7 +5,7 @@ using GeonBit.UI.Source.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Linq;
+using System.Collections.Generic;
 using static GeonBit.UI.Utils.MessageBox;
 
 namespace GeonBit.UI
@@ -18,8 +18,11 @@ namespace GeonBit.UI
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        PanelGrid _RootGridPanel;
+        PanelGrid _FlatRootGridPanel, _DeepRootGridPanel;
         MessageBoxGamePad _MessageBox;
+
+        List<PanelGamePad> _Examples = new List<PanelGamePad>();
+        int currentExample = -1;
 
         /// <summary>
         /// Create the game instance.
@@ -60,8 +63,58 @@ namespace GeonBit.UI
 
         private void InitGamePadExample()
         {
-            _RootGridPanel = new PanelGrid(RootGridLayout.SmallCorners, Anchor.TopRight) { Name = "Root Grid" };
-            UserInterface.Active.AddEntity(_RootGridPanel);
+            #region FLAT SELECTION SAMPLE
+
+            _FlatRootGridPanel = new PanelGrid(
+                SelectionDimension.Flat,
+                RootGridLayout.SmallCornersUltraWideVerticalsHorizontals,
+                Anchor.Center)
+            { Name = "Root Grid" };
+            _Examples.Add(_FlatRootGridPanel);
+            UserInterface.Active.AddEntity(_FlatRootGridPanel);
+
+            _FlatRootGridPanel.GetGridPanel(Anchor.Center).AddChild(
+                new PanelTabsGamePad(TabLocation.Top,
+                    new PanelBar(Orientation.Vertical,
+                        new ButtonGamePad("New Game", skin: ButtonSkin.Alternative, anchor: Anchor.AutoInline),
+                        new ButtonGamePad("Load Game", HierarchyIdentifier.None, anchor: Anchor.AutoInline) { Enabled = false },
+                        new ButtonGamePad("Credits", anchor: Anchor.AutoInline),
+                        new ButtonGamePad("Quit", anchor: Anchor.AutoInline))
+                    { Name = "Menu" },
+                    new PanelBar(Orientation.Vertical,
+                    new Paragraph("Music") { Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.None) },
+                    new SliderGamePad(0, 100, Vector2.Zero),
+                    new Paragraph("Sound") { Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.None) },
+                    new SliderGamePad(0, 100, Vector2.Zero),
+                    new Paragraph("Rag-Doll-Count") { Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.None) },
+                    new SliderGamePad(0, 20, Vector2.Zero),
+                    new Paragraph("Enemy-Count") { Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.None) },
+                    new SliderGamePad(0, 200, Vector2.Zero),
+                    new ButtonGamePad("Reset to Default", skin: ButtonSkin.Alternative, anchor: Anchor.AutoInline)
+                    )
+                    { Name = "Options" }
+                    ));
+
+            _FlatRootGridPanel.GetGridPanel(Anchor.BottomCenter).AddChild(
+                new PanelBar(Orientation.Horizontal,
+                        new RichParagraph(@"{{BUTTON_A}}A{{DEFAULT}}: Accept {{BUTTON_Y}}Y{{DEFAULT}}: Deep {{MONO}}DPad{{DEFAULT}}: Select {{MONO}}LB|RB{{DEFAULT}}: Switch",
+                        Anchor.Center, scale: 2f)
+                        { AlignToCenter = true, WrapWords = false, BreakWordsIfMust = false, AddHyphenWhenBreakWord = false }));
+            _FlatRootGridPanel.GetGridPanel(Anchor.BottomCenter).Size = new Vector2(0, 0.1f);
+
+            //_FlatRootGridPanel.StartPanelSelection();
+
+            #endregion FLAT SELECTION SAMPLE
+
+            #region DEEP SELECTION SAMPLE
+
+            _DeepRootGridPanel = new PanelGrid(
+                SelectionDimension.Deep,
+                RootGridLayout.SmallCorners,
+                Anchor.TopRight)
+            { Name = "Root Grid", Visible = false };
+            _Examples.Add(_DeepRootGridPanel);
+            UserInterface.Active.AddEntity(_DeepRootGridPanel);
 
             PanelGrid panelGrid = new PanelGrid(new Vector2(0, 0), 24, new Vector2(0.33f, -1), Anchor.AutoInline) { Name = "Panel Grid" };
             {
@@ -115,12 +168,12 @@ namespace GeonBit.UI
             { Name = "Select List" };
             selectListPanel.SelectListGamePad.ItemsScale = 1.3f;
 
-            _RootGridPanel.GetGridPanel(Anchor.Center).AddChild(
+            _DeepRootGridPanel.GetGridPanel(Anchor.Center).AddChild(
                 new PanelTabsGamePad(TabLocation.Top,
                     panelGrid,
                     selectListPanel));
 
-            _RootGridPanel.GetGridPanel(Anchor.TopCenter).AddChild(
+            _DeepRootGridPanel.GetGridPanel(Anchor.TopCenter).AddChild(
                 new PanelBar(Orientation.Horizontal,
                     new ButtonGamePad("Button-1", anchor: Anchor.AutoInline) { ToolTipText = "This is Test-Tooltip #1" },
                     new ButtonGamePad("Non-Selectable", HierarchyIdentifier.None, anchor: Anchor.AutoInline) { Enabled = false },
@@ -129,12 +182,12 @@ namespace GeonBit.UI
                     new ButtonGamePad("Toggle", skin: ButtonSkin.Alternative, anchor: Anchor.AutoInline) { ToggleMode = true }
                     ));
 
-            _RootGridPanel.GetGridPanel(Anchor.TopRight).AddChild(
+            _DeepRootGridPanel.GetGridPanel(Anchor.TopRight).AddChild(
                 new PanelBar(Orientation.Horizontal,
-                        new Icon(IconType.Heart, Anchor.Center) { MinSize = new Vector2(0, 0) } 
+                        new Icon(IconType.Heart, Anchor.Center) { MinSize = new Vector2(0, 0) }
                     ));
 
-            _RootGridPanel.GetGridPanel(Anchor.CenterRight)
+            _DeepRootGridPanel.GetGridPanel(Anchor.CenterRight)
                 .AddChild(new DropDownPanel(new Vector2(0, 0),
                 entities: new Entity[]
                 {
@@ -145,52 +198,57 @@ namespace GeonBit.UI
                     new SliderGamePad(0, 100, Vector2.Zero),
                     new ButtonGamePad("Button-2"),
                     new ButtonGamePad("Non-Selectable", HierarchyIdentifier.None) { Enabled = false }
-                }) { Name = "Filter Panel" })
-                .OnClick = (e) => 
+                })
+                { Name = "Filter Panel" })
+                .OnClick = (e) =>
                 {
                     //Demonstrates the possibility of switching the RootGridLayout during runtime.
-                    if (_RootGridPanel.IsRootGridLayout)
+                    if (_DeepRootGridPanel.IsRootGridLayout)
                     {
-                        _RootGridPanel.SetGridLayout(RootGridLayout.SmallCornersWideVerticals);
+                        _DeepRootGridPanel.SetGridLayout(RootGridLayout.SmallCornersWideVerticals);
                     }
-                    else _RootGridPanel.RevertGridLayout();
+                    else _DeepRootGridPanel.RevertGridLayout();
                 };
 
-            _RootGridPanel.GetGridPanel(Anchor.BottomCenter).AddChild(
+            _DeepRootGridPanel.GetGridPanel(Anchor.BottomCenter).AddChild(
                 new PanelBar(Orientation.Horizontal,
-                        new RichParagraph(@"{{BUTTON_A}}A{{DEFAULT}}: Accept {{BUTTON_B}}B{{DEFAULT}}: Back {{MONO}}DPad{{DEFAULT}}: Select {{MONO}}LB|RB{{DEFAULT}}: Switch",
+                        new RichParagraph(@"{{BUTTON_A}}A{{DEFAULT}}: Accept {{BUTTON_Y}}Y{{DEFAULT}}: Flat {{BUTTON_B}}B{{DEFAULT}}: Back {{MONO}}DPad{{DEFAULT}}: Select {{MONO}}LB|RB{{DEFAULT}}: Switch",
                         Anchor.Center, scale: 2f)
                         { AlignToCenter = true, WrapWords = false, BreakWordsIfMust = false, AddHyphenWhenBreakWord = false })
                     );
+            _DeepRootGridPanel.GetGridPanel(Anchor.BottomCenter).Size = new Vector2(0, 0.1f);
 
-            //Hide all empty Panels and make them unselectable by gamepad.
-            _RootGridPanel.HideEmptyPanels();
+            //_DeepRootGridPanel.StartPanelSelection();
 
             //The CenterRight GridPanel is not visible by default (panelGrid with index 0 is selected first).
-            _RootGridPanel.GetGridPanel(Anchor.CenterRight).Visible = false;
+            _DeepRootGridPanel.GetGridPanel(Anchor.CenterRight).Visible = false;
 
             //The CenterRight GridPanel should only be visible when the SelectListPanel is visible.
             selectListPanel.OnVisiblityChange = (e) =>
             {
-                Panel filterPanel = _RootGridPanel.GetGridPanel(Anchor.CenterRight);
+                Panel filterPanel = _DeepRootGridPanel.GetGridPanel(Anchor.CenterRight);
                 filterPanel.Visible = e.Visible;
 
-                if (!e.Visible && _RootGridPanel.SelectedPanel == filterPanel)
+                if (!e.Visible && _DeepRootGridPanel.SelectedPanel == filterPanel)
                 {
-                    _RootGridPanel.ResetPanelSelection();
+                    _DeepRootGridPanel.ResetPanelSelection();
                 }
             };
             panelGrid.OnVisiblityChange = (e) =>
             {
-                _RootGridPanel.GetGridPanel(Anchor.CenterRight).Visible = e.Visible;
+                _DeepRootGridPanel.GetGridPanel(Anchor.CenterRight).Visible = e.Visible;
             };
+
+            #endregion DEEP SELECTION SAMPLE
+
+            NextExample();
 
             base.Initialize();
         }
 
         private void SayHelloWorldClicked(Entity entity)
         {
-            _RootGridPanel.Enabled = false;
+            PanelGamePad.RootGrid.Enabled = false;
 
             _MessageBox = new MessageBoxGamePad();
             _MessageBox.ShowMessageBox(
@@ -210,7 +268,7 @@ namespace GeonBit.UI
         }
         private bool MsgBoxClicked()
         {
-            _RootGridPanel.Enabled = true;
+            PanelGamePad.RootGrid.Enabled = true;
 
             return true;
         }
@@ -231,6 +289,14 @@ namespace GeonBit.UI
             UserInterface.Active.Update(gameTime);
             if (_MessageBox != null) _MessageBox.Update(gameTime);
 
+            if (UserInterface.Active.GamePadInputProvider.GamePadButtonClick(Buttons.Y))
+            {
+                if (PanelGamePad.RootGrid.IsOuterSelection)
+                {
+                    NextExample();
+                }
+            }
+
             base.Update(gameTime);
         }
 
@@ -247,6 +313,34 @@ namespace GeonBit.UI
             UserInterface.Active.DrawMainRenderTarget(spriteBatch);
 
             base.Draw(gameTime);
+        }
+
+        /// <summary>
+        /// Show next UI example.
+        /// </summary>
+        public void NextExample()
+        {
+            currentExample++;
+            UpdateAfterExampleChange();
+        }
+
+        /// <summary>
+        /// Called after we change current example index, to hide all examples
+        /// except for the currently active example + disable prev / next buttons if
+        /// needed (if first or last example).
+        /// </summary>
+        protected void UpdateAfterExampleChange()
+        {
+            if (currentExample > 1) currentExample = 0;
+
+            // hide all panels and show current example panel
+            foreach (PanelGamePad panel in _Examples)
+            {
+                panel.Visible = false;
+            }
+
+            PanelGamePad.RootGrid = _Examples[currentExample];
+            PanelGamePad.RootGrid.StartPanelSelection();
         }
     }
 }
