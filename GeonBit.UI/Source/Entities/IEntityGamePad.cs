@@ -1,4 +1,6 @@
-﻿namespace GeonBit.UI.Source.Entities
+﻿using GeonBit.UI.Entities;
+
+namespace GeonBit.UI.Source.Entities
 {
     /// <summary>
     /// Makes original GeonBit.UI functionalities available in custom gamepad classes.
@@ -49,5 +51,11 @@
         /// Calls the OnMouseWheelScroll() event internally.
         /// </summary>
         void TriggerOnScroll(PanelDirection direction, bool thumbstickEvent);
+
+        /// <summary>
+        /// Triggers when the layout of the RootGrid changed.
+        /// </summary>
+        /// <param name="rootGrid"></param>
+        void TriggerOnLayoutChange(PanelGrid rootGrid);
     }
 }

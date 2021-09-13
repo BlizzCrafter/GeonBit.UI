@@ -109,6 +109,13 @@ namespace GeonBit.UI.Source.Entities
             DoOnMouseWheelScroll();
         }
 
+        /// <summary>
+        /// Triggers when the layout of the RootGrid changed.
+        /// </summary>
+        public void TriggerOnLayoutChange(PanelGrid rootGrid)
+        {
+        }
+
         #endregion Events
 
         private bool _Selected;
@@ -183,6 +190,10 @@ namespace GeonBit.UI.Source.Entities
             base(Vector2.Zero, Anchor.Auto, Vector2.Zero, PanelSkin.ListBackground, null, false)
         {
             Identifier = PanelGamePad.GetIdentifier(HierarchyIdentifier.PanelContent);
+
+            SelectedTextPanelParagraph.WrapWords = false;
+            SelectedTextPanelParagraph.BreakWordsIfMust = false;
+            SelectedTextPanelParagraph.AddHyphenWhenBreakWord = false;
 
             for (int i = 0; i < items.Length; i++)
             {

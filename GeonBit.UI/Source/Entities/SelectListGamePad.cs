@@ -97,6 +97,13 @@ namespace GeonBit.UI.Source.Entities
             }
         }
 
+        /// <summary>
+        /// Triggers when the layout of the RootGrid changed.
+        /// </summary>
+        public void TriggerOnLayoutChange(PanelGrid rootGrid)
+        {
+        }
+
         #endregion Events
 
         /// <summary>

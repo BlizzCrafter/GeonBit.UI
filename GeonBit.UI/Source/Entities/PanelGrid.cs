@@ -75,6 +75,37 @@ namespace GeonBit.UI.Source.Entities
         }
 
         /// <summary>
+        /// Set the grid layout to the specified value.
+        /// </summary>
+        public void SetGridLayout(RootGridLayout rootGridLayout)
+        {
+            _NewRootGridLayout = rootGridLayout;
+
+            if (_NewRootGridLayout == RootGridLayout.Default) CreateDefaultLayout();
+            else if (_NewRootGridLayout == RootGridLayout.SmallCorners) CreateSmallCornersLayout();
+            else if (_NewRootGridLayout == RootGridLayout.SmallCornersVerticals) CreateSmallCornersVerticalsLayout();
+            else if (_NewRootGridLayout == RootGridLayout.SmallCornersWideVerticals) CreateSmallCornersWideVerticalsLayout();
+
+            Children.ToList().ForEach(
+                    rootGridPanel => rootGridPanel.Children.ToList().ForEach(
+                    panelGrid => panelGrid.Children.OfType<IEntityGamePad>().ToList().ForEach(
+                    IEntityGamePad => IEntityGamePad.TriggerOnLayoutChange(this))));
+        }
+        /// <summary>
+        /// Revert the grid layout to the initially one.
+        /// </summary>
+        public void RevertGridLayout() => SetGridLayout(RootGridLayout);
+        /// <summary>
+        /// True if the RootGridLayout is the initially one. False if it was changed.
+        /// </summary>
+        public bool IsRootGridLayout => RootGridLayout == _NewRootGridLayout;
+        /// <summary>
+        /// The initial grid layout.
+        /// </summary>
+        public RootGridLayout RootGridLayout { get; private set; }
+        private RootGridLayout _NewRootGridLayout;
+
+        /// <summary>
         /// This hides all empty panels in the Panel-Grid.
         /// </summary>
         public void HideEmptyPanels()
@@ -163,16 +194,13 @@ namespace GeonBit.UI.Source.Entities
             PanelOverflowBehavior = PanelOverflowBehavior.Overflow;
 
             CreatePanelGrid(9, new Vector2(0.33f, 0));
-
-            if (rootGridLayout == RootGridLayout.Default) CreateDefaultLayout();
-            else if (rootGridLayout == RootGridLayout.SmallCorners) CreateSmallCornersLayout();
-            else if (rootGridLayout == RootGridLayout.SmallCornersVerticals) CreateSmallCornersVerticalsLayout();
-            else if (rootGridLayout == RootGridLayout.SmallCornersWideVerticals) CreateSmallCornersWideVerticalsLayout();
-
-            Padding = Vector2.Zero;
-            SpaceAfter = Vector2.Zero;
-            SpaceBefore = Vector2.Zero;
-
+            {
+                //Need to set these properties after panel grid creation.
+                Padding = Vector2.Zero;
+                SpaceAfter = Vector2.Zero;
+                SpaceBefore = Vector2.Zero;
+            }
+            SetGridLayout(RootGridLayout = rootGridLayout);
             SetDefaultPanelIndex(defaultPanelSelection);
             StartPanelSelection();
         }

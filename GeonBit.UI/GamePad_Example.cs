@@ -60,7 +60,7 @@ namespace GeonBit.UI
 
         private void InitGamePadExample()
         {
-            _RootGridPanel = new PanelGrid(RootGridLayout.SmallCornersWideVerticals, Anchor.TopRight) { Name = "Root Grid" };
+            _RootGridPanel = new PanelGrid(RootGridLayout.SmallCorners, Anchor.TopRight) { Name = "Root Grid" };
             UserInterface.Active.AddEntity(_RootGridPanel);
 
             PanelGrid panelGrid = new PanelGrid(new Vector2(0, 0), 24, new Vector2(0.33f, -1), Anchor.AutoInline) { Name = "Panel Grid" };
@@ -82,7 +82,7 @@ namespace GeonBit.UI
             SelectListPanel selectListPanel = new SelectListPanel(new Vector2(0, 0), anchor: Anchor.TopCenter,
                 headline: new RichParagraph(System.String.Format(
                     "{0,-8} {1,-8} {2,-8} {3,-8} {4,-8} {5,-8} {6,-8}", "{{LIST_TITLE}}",
-                    "Name", "Class", "Level", "Test1", "Test2", "Test3"), Anchor.TopLeft, scale: 1.6f)
+                    "Name", "Class", "Level", "Weapon", "Test2", "Test3"), Anchor.TopLeft, scale: 1.6f)
                 {
                     WrapWords = false,
                     BreakWordsIfMust = false,
@@ -90,27 +90,27 @@ namespace GeonBit.UI
                 },
                 items: new string[]
                 {
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Joe", "Mage", "5", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Ron", "Monk", "7", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Alex", "Rogue", "3", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Jim", "Paladin", "7", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Abe", "Cleric", "8", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "James", "Warlock", "20", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Bob", "Bard", "1", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Frank", "Mage", "5", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Luis", "Monk", "7", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Babo", "Rogue", "3", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Karin", "Paladin", "7", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Lexter", "Cleric", "8", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Lumi", "Warlock", "20", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Jax", "Bard", "1", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Joli", "Mage", "5", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Keno", "Monk", "7", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Tom", "Rogue", "3", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Rex", "Paladin", "7", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Timbo", "Cleric", "8", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Alix", "Warlock", "20", "Test1", "Test2", "Test3"),
-                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Rambo", "Bard", "1", "Test1", "Test2", "Test3")
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Joe", "Mage", "5", "Stuff", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Ron", "Monk", "7", "Club", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Alex", "Rogue", "3", "Daggers", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Jim", "Paladin", "7", "Sword", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Abe", "Cleric", "8", "Wand", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "James", "Warlock", "20", "Axe", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Bob", "Bard", "1", "Knife", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Frank", "Mage", "5", "Wand", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Luis", "Monk", "7", "Daggers", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Babo", "Rogue", "3", "Claws", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Karin", "Paladin", "7", "Mace", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Lexter", "Cleric", "8", "Spellbook", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Lumi", "Warlock", "20", "Longsword", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Jax", "Bard", "1", "Harp", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Joli", "Mage", "5", "Spellbook", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Keno", "Monk", "7", "Longstuff", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Tom", "Rogue", "3", "Fists", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Rex", "Paladin", "7", "Shield", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Timbo", "Cleric", "8", "Potions", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Alix", "Warlock", "20", "Spear", "Test2", "Test3"),
+                    System.String.Format("{0,-10} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10}", "Rambo", "Bard", "1", "Mandolin", "Test2", "Test3")
                 })
             { Name = "Select List" };
             selectListPanel.SelectListGamePad.ItemsScale = 1.3f;
@@ -134,20 +134,27 @@ namespace GeonBit.UI
                         new Icon(IconType.Heart, Anchor.Center) { MinSize = new Vector2(0, 0) } 
                     ));
 
-            _RootGridPanel.GetGridPanel(Anchor.CenterRight).AddChild(
-                new DropDownPanel(new Vector2(0, 0),
+            _RootGridPanel.GetGridPanel(Anchor.CenterRight)
+                .AddChild(new DropDownPanel(new Vector2(0, 0),
                 entities: new Entity[]
                 {
-                    new DropDownGamePad("a_Filter-1", "a_Filter-2", "a_Filter-3", "a_Filter-4"),
-                    new DropDownGamePad("b_Filter-1", "b_Filter-2", "b_Filter-3", "b_Filter-4"),
-                    new DropDownGamePad("c_Filter-1", "c_Filter-2", "c_Filter-3", "c_Filter-4"),
-                    new DropDownGamePad("d_Filter-1", "d_Filter-2", "d_Filter-3", "d_Filter-4"),
+                    new DropDownGamePad("Mage", "Monk", "Rogue", "Paladin", "Cleric", "Warlock", "Bard") { DefaultText = "Class" },
+                    new DropDownGamePad("< 5", "< 10", "< 25", "< 50", "< 100") { DefaultText = "Level" },
+                    new DropDownGamePad("Stuff", "Club", "Daggers", "Sword", "Wand", "Claws", "Mace", "Spellbook") { DefaultText = "Weapon" },
                     new ButtonGamePad("Button-1"),
                     new SliderGamePad(0, 100, Vector2.Zero),
                     new ButtonGamePad("Button-2"),
                     new ButtonGamePad("Non-Selectable", HierarchyIdentifier.None) { Enabled = false }
-                })
-                { Name = "Filter Panel" });
+                }) { Name = "Filter Panel" })
+                .OnClick = (e) => 
+                {
+                    //Demonstrates the possibility of switching the RootGridLayout during runtime.
+                    if (_RootGridPanel.IsRootGridLayout)
+                    {
+                        _RootGridPanel.SetGridLayout(RootGridLayout.SmallCornersWideVerticals);
+                    }
+                    else _RootGridPanel.RevertGridLayout();
+                };
 
             _RootGridPanel.GetGridPanel(Anchor.BottomCenter).AddChild(
                 new PanelBar(Orientation.Horizontal,
