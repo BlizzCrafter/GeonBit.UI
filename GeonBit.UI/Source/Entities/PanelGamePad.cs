@@ -185,10 +185,8 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// Selects the PanelRoot.
         /// </summary>
-        private void RootMode(bool comingFromRootGrid, bool raiseEvents = true)
+        private void RootMode(bool comingFromRootGrid)
         {
-            if (raiseEvents) OnClick?.Invoke(this);
-
             //We are coming not from the RootGrid which means we are just coming from a RootPanel (from inner -> to outer).
             if (!comingFromRootGrid)
             {
@@ -311,10 +309,8 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// Selects the first panel content in the currently selected panel of this PanelGrid.
         /// </summary>
-        private void PanelContentMode(bool raiseEvents = true)
+        private void PanelContentMode()
         {
-            if (raiseEvents) SelectedPanel.OnClick?.Invoke(SelectedPanel);
-
             //NextMod: from Panel -> to PanelContent selection.
             SelectionMode = SelectionMode.PanelContent;
 
@@ -323,8 +319,6 @@ namespace GeonBit.UI.Source.Entities
                 SelectedPanel
                 .Children
                 .Where(x => x.Identifier == GetIdentifier(HierarchyIdentifier.PanelContent)).ToList();
-
-            //Check if we found any selectable children. If yes change selection mode to PanelContent.
 
             //Reset ChildrenIndex to start child selection from the first index again.
             ChildrenIndex = 0;
@@ -518,7 +512,7 @@ namespace GeonBit.UI.Source.Entities
         /// <summary>
         /// Click on the currently selected child (PanelContent).
         /// </summary>
-        protected void ClickPanelContent(bool raiseClickEvent = true)
+        protected void ClickPanelContent()
         {
             if (_SelectableChildren != null && _SelectableChildren.Count > 0)
             {
