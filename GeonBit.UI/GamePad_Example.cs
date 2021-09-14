@@ -181,7 +181,11 @@ namespace GeonBit.UI
             _DeepRootGridPanel.GetGridPanel(Anchor.Center).AddChild(
                 new PanelTabsGamePad(TabLocation.Top,
                     panelGrid,
-                    selectListPanel));
+                    selectListPanel)
+                { 
+                    //Shifting the Panel a bit to make the Highlight-Selector of the RootGrid more visible.
+                    Padding = new Vector2(6, 0) 
+                });
 
             _DeepRootGridPanel.GetGridPanel(Anchor.TopCenter).AddChild(
                 new PanelBar(Orientation.Horizontal,
